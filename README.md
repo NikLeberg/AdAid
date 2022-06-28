@@ -41,12 +41,12 @@ The following paragraphs uses the notion of a _rule_. Rules are a way to customi
 - All enabled rules are picked up by the background a11y service and triggered when the conditions match.
 
 ### Example Rules
-| Name            | App                        | View id              | Text        | Action     | Note | See in action |
-|-----------------|----------------------------|----------------------|-------------|------------|------|---------------|
-| Instagram Story | com.instagram.android      | reel_viewer_subtitle | Sponsored.* | Swipe left |      | [recording](./doc/videos/instagram.mp4) |
-| Instagram Reel  | com.instagram.android      | subtitle_text        | Sponsored.* | Swipe up   |      |               |
-| YouTube Click   | com.google.android.youtube | skip_ad_button_text  | .*[sS]kip.* | Click      |      | [recording](./doc/videos/youtube.mp4) |
-| YouTube Mute    | com.google.android.youtube | ad_progress_text     |             | Mute       |      |               |
+| Name            | App                        | View id              | Text          | Action     | Note | See in action |
+|-----------------|----------------------------|----------------------|---------------|------------|------|---------------|
+| Instagram Story | com.instagram.android      | reel_viewer_subtitle | `Sponsored.*` | Swipe left |      | [recording](./doc/videos/instagram.mp4) |
+| Instagram Reel  | com.instagram.android      | subtitle_text        | `Sponsored.*` | Swipe up   |      |               |
+| YouTube Click   | com.google.android.youtube | skip_ad_button_text  | `.*[sS]kip.*` | Click      |      | [recording](./doc/videos/youtube.mp4) |
+| YouTube Mute    | com.google.android.youtube | ad_progress_text     |               | Mute       |      |               |
 
 ## License
 [MIT](LICENSE) © [N. Leuenberger](mailto:leuen4@bfh.ch), [A. Reusser](mailto:reusa1@bfh.ch).

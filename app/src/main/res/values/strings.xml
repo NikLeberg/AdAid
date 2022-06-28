@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">AdAid</string>
+
+
+    <!-- String representation of action types -->
+    <!-- Keep in sync with ActionType -->
+    <string name="action_swipe_left">Swipe left</string>
+    <string name="action_swipe_right">Swipe right</string>
+    <string name="action_swipe_up">Swipe up</string>
+    <string name="action_swipe_down">Swipe down</string>
+    <string name="action_click">Click</string>
+    <string name="action_mute">Mute</string>
+
+    <!-- Strings used for activity rule -->
+    <string name="rule_edit_activity_title">Edit rule</string>
+    <string name="rule_new_activity_title">Create new rule</string>
+    <string name="rule_name">Name</string>
+    <string name="rule_name_error">Please enter a name</string>
+    <string name="rule_enabled">Enabled</string>
+    <string name="rule_app">Application</string>
+    <string name="rule_app_error">Please select an application</string>
+    <string name="rule_view_id">View id</string>
+    <string name="rule_view_id_error">Please enter a view id</string>
+    <string name="rule_view_text_note">What text should be inside the given view to trigger the rule. Supports regex. Leave empty to trigger rule regardless of text.</string>
+    <string name="rule_view_text">Text to search inside view</string>
+    <string name="rule_action_type">Action</string>
+    <string-array name="rule_action_type_list">
+        <!-- Keep in sync with ActionType -->
+        <item>@string/action_swipe_left</item>
+        <item>@string/action_swipe_right</item>
+        <item>@string/action_swipe_up</item>
+        <item>@string/action_swipe_down</item>
+        <item>@string/action_click</item>
+        <item>@string/action_mute</item>
+    </string-array>
+    <string name="rule_action_type_error">Please select an action type</string>
+    <string name="rule_button_save">Save changes</string>
+    <string name="rule_button_delete">Delete rule</string>
+    <string name="rule_db_error">Database error %s. Please try again.</string>
+
+    <!-- Strings used for a11y service -->
+    <string name="a11y_service_label">AdAid Service</string>
+    <string name="a11y_service_description">An adblocker that utilizes accessibility service functionalities to react to ads in other apps.</string>
+    <string name="a11y_service_not_enabled_message">The accessibility service of this app is disabled. Please enable it in the settings.</string>
+    <string name="a11y_service_not_enabled_action">Open settings</string>
+    <string name="rule_action_type_note">Actions that can be triggered: Swipe (left/right/up/down) - Swipe in the given direction across the screen. Click - Click the view that matches the view id. Mute - Mute audio for as long as the matching view id is visible.</string>
+</resources>

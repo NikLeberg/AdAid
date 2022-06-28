@@ -1,0 +1,24 @@
+default:
+  image: nikolodion/android-ci
+
+stages:
+  - build
+  - test
+
+lintDebug:
+  stage: build
+  script:
+    - ./gradlew :app:lintDebug
+
+assembleDebug:
+  stage: build
+  script:
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+      - app/build/outputs/
+
+debugTests:
+  stage: test
+  script:
+    - ./gradlew :app:testDebug

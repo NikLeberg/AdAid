@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AdAid</string>
+    <string name="a11y_service_label">AdAid Service</string>
+    <string name="a11y_service_description">Ein Werbeblocker der als Hintergrunddienst in anderen Apps Werbung wegklicken oder überspringen kann.</string>
+    <string name="a11y_service_not_enabled_message">Der bedienungshilfen Hintergrunddienst dieser App ist nicht aktiviert. Bitte in den Einstellungen aktivieren.</string>
+    <string name="a11y_service_not_enabled_action">Einstellungen öffnen</string>
+    <string name="rule_view_id">View Id</string>
+    <string name="rule_view_text">Zu suchender Text im View.</string>
+    <string name="action_swipe_left">Nach links wischen</string>
+    <string name="action_swipe_right">Nach rechts wischen</string>
+    <string name="action_swipe_up">Nach oben wischen</string>
+    <string name="action_swipe_down">Nach unten wischen</string>
+    <string name="action_click">Klicken</string>
+    <string name="action_mute">Stummschalten</string>
+    <string name="rule_name">Namen</string>
+    <string name="rule_name_error">Bitte einen Namen eingeben</string>
+    <string name="rule_enabled">Aktiviert</string>
+    <string name="rule_app">App</string>
+    <string name="rule_app_error">Bitte eine App auswählen</string>
+    <string name="rule_view_id_error">Bitte eine View Id eingeben</string>
+    <string name="rule_view_text_note">Was für ein Text im angegebenen View sein sollte um die Regel auszulösen. Unterstützt RegEx. Leer lassen um die Regel bei jeglichem Texinhalt auszulösen.</string>
+    <string name="rule_action_type">Aktion</string>
+    <string name="rule_action_type_error">Bitte eine Aktion auswählen</string>
+    <string name="rule_button_save">Änderungen speichern</string>
+    <string name="rule_button_delete">Regel löschen</string>
+    <string name="rule_edit_activity_title">Regel bearbeiten</string>
+    <string name="rule_new_activity_title">Neue Regel erstellen</string>
+    <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
+    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus. Klicken - Klickt auf das angegebene View. Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das angegebene view sichtbar ist.</string>
+</resources>

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ import java.util.List;
  * - https://developer.android.com/training/package-visibility/declaring
  * - https://stackoverflow.com/questions/60679685/what-does-query-all-packages-permission-do
  *
- * @author Niklaus Leuenberger
+ * @author Niklaus Leuenberger TLGINO
  */
 public class AppAdapter extends ArrayAdapter<String> {
 
@@ -47,11 +48,27 @@ public class AppAdapter extends ArrayAdapter<String> {
         packageManager = context.getPackageManager();
         List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
         // Reduce ApplicationInfo to just packageName attribute and sort it into an array.
-        String[] packageNames = packages.stream().map(p -> p.packageName).sorted().toArray(String[]::new);
+        String[] packageNames = sortPackages(packages);
         super.addAll(packageNames);
         // Loading all package icons upfront would require too much processing time on the main
         // ui tread and create animation stutters. So this is handled in getView().
     }
+
+    /**
+     * Returns a list of names corresponding to the non-system file apps
+     * @param packages list of found packages
+     * @return String[] of package names
+     */
+    public String[] sortPackages(List<ApplicationInfo> packages) {
+        ArrayList<String> names = new ArrayList<>();
+        for (ApplicationInfo applicationInfo : packages){
+            if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0){
+                names.add(applicationInfo.packageName);
+            }
+        }
+        return names.stream().toArray(String[]::new);
+    }
+
 
     /**
      * Get the icon of the app as drawable.

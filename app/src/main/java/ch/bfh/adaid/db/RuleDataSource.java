@@ -7,11 +7,21 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Data source for the rules. Observers can register to be notified when rules are added, removed or
+ * updated and they also can edit the rules themselves.
+ *
+ * @author Niklaus Leuenberger
+ */
 public class RuleDataSource {
 
     private final RuleDao ruleDao; // rule database access object
     private static final ArrayList<RuleObserver> observers = new ArrayList<>();
 
+    /**
+     * Error states on method calls. The observer that issued the call will be notified of the error
+     * in the onRuleError() method.
+     */
     public enum Error {
         ADD_RULE_FAILED,
         UPDATE_RULE_FAILED,

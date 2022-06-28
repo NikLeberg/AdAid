@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.AdAid">
         <activity
-            android:name=".MainActivity"
+            android:name=".gui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AdAid.NoActionBar">
             <intent-filter>
@@ -25,12 +25,12 @@
             android:name=".gui.rule.EditRuleActivity"
             android:exported="false"
             android:label="@string/rule_edit_activity_title"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".gui.main.MainActivity" />
         <activity
             android:name=".gui.rule.NewRuleActivity"
             android:exported="false"
             android:label="@string/rule_new_activity_title"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".gui.main.MainActivity" />
 
         <service
             android:name=".service.A11yService"

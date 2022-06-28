@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/rule_button_save"
+            android:contentDescription="@string/rule_button_delete"
             android:text="@string/rule_button_delete"
             android:textColor="@color/design_default_color_error" />
 

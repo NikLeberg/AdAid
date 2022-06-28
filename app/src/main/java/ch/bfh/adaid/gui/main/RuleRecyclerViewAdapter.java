@@ -1,5 +1,5 @@
 
-package ch.bfh.adaid;
+package ch.bfh.adaid.gui.main;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,16 +14,25 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 
+import ch.bfh.adaid.R;
 import ch.bfh.adaid.db.Rule;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+/**
+ * RuleRecyclerViewAdapter is the adapter for the RecyclerView in the MainActivity. It has a list of
+ * rules and is responsible for the layout of the RecyclerView.
+ *
+ * Source: https://stackoverflow.com/a/40584425/16034014
+ *
+ * @author Adrian Reusser
+ */
+public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerViewAdapter.ViewHolder> {
 
     private final ArrayList<Rule> mData;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, ArrayList<Rule> data) {
+    RuleRecyclerViewAdapter(Context context, ArrayList<Rule> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }

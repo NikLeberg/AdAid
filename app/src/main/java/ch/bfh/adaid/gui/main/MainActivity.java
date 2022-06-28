@@ -1,4 +1,4 @@
-package ch.bfh.adaid;
+package ch.bfh.adaid.gui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.bfh.adaid.R;
 import ch.bfh.adaid.db.Rule;
 import ch.bfh.adaid.db.RuleDataSource;
 import ch.bfh.adaid.db.RuleObserver;
@@ -22,9 +23,14 @@ import ch.bfh.adaid.gui.rule.EditRuleActivity;
 import ch.bfh.adaid.gui.rule.NewRuleActivity;
 import ch.bfh.adaid.service.A11yService;
 
-public class MainActivity extends AppCompatActivity implements RuleObserver, MyRecyclerViewAdapter.ItemClickListener {
+/**
+ * The main activity that is showing a list of rules.
+ *
+ * @author Niklaus Leuenberger
+ */
+public class MainActivity extends AppCompatActivity implements RuleObserver, RuleRecyclerViewAdapter.ItemClickListener {
 
-    MyRecyclerViewAdapter adapter;
+    RuleRecyclerViewAdapter adapter;
     private RuleDataSource data;
     ArrayList<Rule> rules = new ArrayList<>();
 
@@ -37,27 +43,13 @@ public class MainActivity extends AppCompatActivity implements RuleObserver, MyR
         // managed by the RuleObserver callbacks implemented further down.
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapter(this, rules);
+        adapter = new RuleRecyclerViewAdapter(this, rules);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
         // Start rules database and add this activity as observer.
         data = new RuleDataSource(getApplicationContext());
         data.addObserver(this);
-
-        // TEST: Populate DB with a few rules.
-//        Rule instagramStoryRule = new Rule("Instagram Story", true, "com.instagram.android",
-//                "reel_viewer_subtitle", "Gesponsert.*", ActionType.ACTION_SWIPE_LEFT);
-//        data.add(this, instagramStoryRule);
-//        Rule instagramReelRule = new Rule("Instagram Reel", true, "com.instagram.android",
-//                "subtitle_text", "Gesponsert.*", ActionType.ACTION_SWIPE_UP);
-//        data.add(this, instagramReelRule);
-//        Rule youtubeVideoRule = new Rule("YouTube Click", true, "com.google.android.youtube",
-//                "skip_ad_button_text", "Werbung überspringen", ActionType.ACTION_CLICK);
-//        data.add(this, youtubeVideoRule);
-//        Rule youtubeMuteRule = new Rule("YouTube Mute", true, "com.google.android.youtube",
-//                "ad_progress_text", null, ActionType.ACTION_MUTE);
-//        data.add(this, youtubeMuteRule);
 
         // On a click to the FAB open the rule activity to create a new rule.
         FloatingActionButton fab = findViewById(R.id.fab);

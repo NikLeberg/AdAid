@@ -29,10 +29,10 @@ android {
         viewBinding true
     }
     namespace 'ch.bfh.adaid'
-    lintOptions {
-        textReport true
-        textOutput 'stdout'
+    lint {
         abortOnError false
+        textOutput file('stdout')
+        textReport true
     }
 }
 

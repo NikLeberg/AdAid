@@ -48,7 +48,7 @@ public class FlattenedViewTree implements Serializable {
         if (node == null) {
             return;
         }
-        views.add(new SimpleView(node, level));
+        views.add(new SimpleView(node, level, packageName));
         for (int i = 0; i < node.getChildCount(); i++) {
             AccessibilityNodeInfo child = node.getChild(i);
             flattenTree(child, level + 1);
@@ -84,7 +84,7 @@ public class FlattenedViewTree implements Serializable {
      *
      * @author Niklaus Leuenberger
      */
-    public class SimpleView implements Serializable {
+    public static class SimpleView implements Serializable {
         public final String id;
         public final String text;
         public final int level;
@@ -94,8 +94,9 @@ public class FlattenedViewTree implements Serializable {
          *
          * @param viewNode The {@link AccessibilityNodeInfo} to simplify.
          * @param level The level in the tree. (0 = root)
+         * @param packageName The package id / app name for which this view was created.
          */
-        private SimpleView(AccessibilityNodeInfo viewNode, int level) {
+        private SimpleView(AccessibilityNodeInfo viewNode, int level, String packageName) {
             String longId = viewNode.getViewIdResourceName();
             if (longId != null) {
                 // Remove com.app.xyz:id/ from the id. Some ids don't start with the package name,

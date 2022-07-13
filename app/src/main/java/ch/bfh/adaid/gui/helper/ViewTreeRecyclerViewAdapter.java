@@ -19,7 +19,7 @@ import ch.bfh.adaid.R;
  *
  * @author Niklaus Leuenberger
  */
-public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRecyclerViewAdapter.ViewHolder> {
+public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRecyclerViewAdapter.ViewTreeRecyclerViewHolder> {
 
     private final FlattenedViewTree mData;
     private final LayoutInflater mInflater;
@@ -34,14 +34,14 @@ public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRe
     // inflates the row layout from xml when needed
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewTreeRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.tree_view_row, parent, false);
-        return new ViewHolder(view);
+        return new ViewTreeRecyclerViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewTreeRecyclerViewHolder holder, int position) {
         FlattenedViewTree.SimpleView view = getItem(position);
         if (view.id.isEmpty()) {
             holder.textViewId.setText(R.string.rule_helper_value_not_set);
@@ -64,11 +64,11 @@ public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRe
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewTreeRecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView textViewId;
         TextView textViewText;
 
-        ViewHolder(View itemView) {
+        ViewTreeRecyclerViewHolder(View itemView) {
             super(itemView);
             textViewId = itemView.findViewById(R.id.viewId);
             itemView.setOnClickListener(this::onItemClick);

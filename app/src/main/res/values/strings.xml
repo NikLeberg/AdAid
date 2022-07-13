@@ -40,6 +40,26 @@
     <string name="rule_db_error">Database error %s. Please try again.</string>
     <string name="rule_action_bar_help">Help finding values</string>
 
+    <!-- Strings for rule helper activity -->
+    <string name="rule_helper_activity_title">Rule helper</string>
+    <string name="rule_helper_package_label">Snapshot was made for the app</string>
+    <string name="rule_helper_package_icon_description">App icon</string>
+    <string name="rule_helper_row_text_label">Text</string>
+    <string name="rule_helper_row_id_label">Id</string>
+    <string name="rule_helper_value_not_set" translatable="false">----</string>
+
+    <!-- Strings used for rule helper dialog -->
+    <string name="rule_helper_dialog_message">Finding the correct rule values is non trivial. You can activate a helper mechanism to help you find the <b>application name</b>, the <b>view id</b> and the <b>view text</b> for the rule. After activation, navigate to the app you want to find the values for and wait for the relevant view to become visible. As soon as it is visible, click the notification of this app to create a snapshot of the current view hierarchy. You\'ll automatically return back here where you can select for what element you want to create a rule.</string>
+    <string name="rule_helper_dialog_positive">Activate</string>
+    <string name="rule_helper_dialog_negative">Cancel</string>
+    <string name="rule_helper_dialog_neutral">Use previous snapshot</string>
+    <string name="rule_helper_dialog_service_not_enabled">Please enable the accessibility service of this app first.</string>
+
+    <!-- Strings used for rule helper notification -->
+    <string name="rule_helper_notification_channel_name">General</string>
+    <string name="rule_helper_notification_title">Helping you find the rule values</string>
+    <string name="rule_helper_notification_text">When the view you want to find the values for is visible, tap this notification to take a snapshot and return to the rule creation.</string>
+
     <!-- Strings used for a11y service -->
     <string name="a11y_service_label">AdAid Service</string>
     <string name="a11y_service_description">An adblocker that utilizes accessibility service functionalities to react to ads in other apps.</string>

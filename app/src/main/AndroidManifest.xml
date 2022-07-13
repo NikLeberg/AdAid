@@ -31,6 +31,11 @@
             android:exported="false"
             android:label="@string/rule_new_activity_title"
             android:parentActivityName=".gui.main.MainActivity" />
+        <activity
+            android:name=".gui.helper.RuleHelperActivity"
+            android:exported="false"
+            android:label="@string/rule_helper_activity_title"
+            android:parentActivityName=".gui.rule.RuleActivity" />
 
         <service
             android:name=".service.A11yService"

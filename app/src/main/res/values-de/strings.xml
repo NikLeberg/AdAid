@@ -28,6 +28,19 @@
     <string name="rule_new_activity_title">Neue Regel erstellen</string>
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
     <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus. Klicken - Klickt auf das angegebene View. Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das angegebene view sichtbar ist.</string>
+    <string name="rule_helper_row_id_label">Id</string>
+    <string name="rule_helper_activity_title">Regelhelfer</string>
+    <string name="rule_helper_row_text_label">Text</string>
     <string name="rule_view_id_note">Die Id der View welche diese Regel auslösen soll. Dies ist nicht trivial zu finden. Benutze den Regelhelfer (oben rechts) um sie zu finden.</string>
+    <string name="rule_helper_package_label">Aufnahme wurde für folgene App gemacht</string>
+    <string name="rule_helper_package_icon_description">App Icon</string>
     <string name="rule_action_bar_help">Hilfe beim finden der Werte</string>
+    <string name="rule_helper_dialog_message">Die korrekten Regelwerte zu finden ist nicht trivial. Folgend kann ein Regelhelfer Mechanismus aktiviert werden, welcher hilft den <b>App Namen</b>, die <b>View Id</b> und den <b>View Text</b> zu finden. Navigiere nch der Aktivierung zur App für welche die Regel erstellt werden soll. Sobald die View sichbar ist, klicke auf die Benachrichtigung dieser App um eine Aufnahme der sichtbaren View Hierarchie zu erstellen. Diese App öffnet sich dann wieder automatisch und die View kann aus einer Liste ausgewählt werden.</string>
+    <string name="rule_helper_dialog_positive">Aktivieren</string>
+    <string name="rule_helper_dialog_negative">Abbrechen</string>
+    <string name="rule_helper_dialog_neutral">Vorherige Aufnahme verwenden</string>
+    <string name="rule_helper_dialog_service_not_enabled">Bitte zuerst den Bedienungshilfendienst dieser App aktivieren.</string>
+    <string name="rule_helper_notification_channel_name">Allgemein</string>
+    <string name="rule_helper_notification_title">Regelhelfer</string>
+    <string name="rule_helper_notification_text">Klicke auf diese Benachrichtigung wenn die View, für die die Werte gefunden werden sollten, sichtbar ist.</string>
 </resources>

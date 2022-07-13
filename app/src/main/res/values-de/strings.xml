@@ -43,4 +43,5 @@
     <string name="rule_helper_notification_channel_name">Allgemein</string>
     <string name="rule_helper_notification_title">Regelhelfer</string>
     <string name="rule_helper_notification_text">Klicke auf diese Benachrichtigung wenn die View, für die die Werte gefunden werden sollten, sichtbar ist.</string>
+    <string name="rule_helper_value_not_set">-- ohne Id --</string>
 </resources>

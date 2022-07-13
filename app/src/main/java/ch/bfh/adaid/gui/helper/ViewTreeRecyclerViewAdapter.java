@@ -45,8 +45,10 @@ public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRe
         FlattenedViewTree.SimpleView view = getItem(position);
         if (view.id.isEmpty()) {
             holder.textViewId.setText(R.string.rule_helper_value_not_set);
+            holder.textViewId.setAlpha(0.5f);
         } else {
             holder.textViewId.setText(view.id);
+            holder.textViewId.setAlpha(1.0f);
         }
         holder.textViewText.setText(view.text);
         ViewGroup.MarginLayoutParams params;

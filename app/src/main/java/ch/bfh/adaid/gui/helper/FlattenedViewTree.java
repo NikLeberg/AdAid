@@ -1,6 +1,5 @@
 package ch.bfh.adaid.gui.helper;
 
-import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.io.Serializable;
@@ -98,18 +97,17 @@ public class FlattenedViewTree implements Serializable {
          */
         private SimpleView(AccessibilityNodeInfo viewNode, int level, String packageName) {
             String longId = viewNode.getViewIdResourceName();
-            if (longId != null) {
+            if (longId == null) {
+                id = "";
+            } else {
                 // Remove com.app.xyz:id/ from the id. Some ids don't start with the package name,
-                // maybe those are views that get generated from some default android ui stuff?
-                // TODO: The a11y service can't handle them at the moment.
+                // maybe those are views that get generated from some default android ui stuff. Set
+                // them to empty as the a11y service can't handle them at the moment.
                 if (longId.startsWith(packageName)) {
                     id = longId.substring(longId.lastIndexOf("/") + 1);
                 } else {
-                    Log.e("FlattenedViewTree", "Package name does not match! Expected " + packageName + ", got " + longId);
-                    id = longId;
+                    id = "";
                 }
-            } else {
-                id = "";
             }
             text = viewNode.getText() == null ? "" : viewNode.getText().toString();
             this.level = level;

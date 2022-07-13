@@ -28,4 +28,6 @@
     <string name="rule_new_activity_title">Neue Regel erstellen</string>
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
     <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus. Klicken - Klickt auf das angegebene View. Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das angegebene view sichtbar ist.</string>
+    <string name="rule_view_id_note">Die Id der View welche diese Regel auslösen soll. Dies ist nicht trivial zu finden. Benutze den Regelhelfer (oben rechts) um sie zu finden.</string>
+    <string name="rule_action_bar_help">Hilfe beim finden der Werte</string>
 </resources>

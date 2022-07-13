@@ -20,6 +20,7 @@
     <string name="rule_app">Application</string>
     <string name="rule_app_error">Please select an application</string>
     <string name="rule_view_id">View id</string>
+    <string name="rule_view_id_note">The id of the view that should trigger the rule. Finding this is non trivial. Use the help mechanism (help icon, top right) to find it.</string>
     <string name="rule_view_id_error">Please enter a view id</string>
     <string name="rule_view_text_note">What text should be inside the given view to trigger the rule. Supports regex. Leave empty to trigger rule regardless of text.</string>
     <string name="rule_view_text">Text to search inside view</string>
@@ -37,6 +38,7 @@
     <string name="rule_button_save">Save changes</string>
     <string name="rule_button_delete">Delete rule</string>
     <string name="rule_db_error">Database error %s. Please try again.</string>
+    <string name="rule_action_bar_help">Help finding values</string>
 
     <!-- Strings used for a11y service -->
     <string name="a11y_service_label">AdAid Service</string>

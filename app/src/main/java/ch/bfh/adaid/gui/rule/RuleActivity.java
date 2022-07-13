@@ -1,11 +1,17 @@
 package ch.bfh.adaid.gui.rule;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +26,7 @@ import ch.bfh.adaid.action.ActionType;
 import ch.bfh.adaid.db.Rule;
 import ch.bfh.adaid.db.RuleDataSource;
 import ch.bfh.adaid.db.RuleObserver;
+import ch.bfh.adaid.gui.helper.RuleHelperActivity;
 
 /**
  * Base activity for editing existing rules or adding new rules. Implements common form manipulation
@@ -29,9 +36,52 @@ import ch.bfh.adaid.db.RuleObserver;
  */
 public abstract class RuleActivity extends AppCompatActivity implements RuleObserver {
 
+    /**
+     * Intent extra key for starting this activity. Put as value the rule to edit as long.
+     */
+    public static final String EXTRA_VIEW_ID_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewId";
+    public static final String EXTRA_VIEW_TEXT_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewText";
+    public static final String EXTRA_PACKAGE_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.packageName";
+
+    /**
+     * Get an intent to return data from the rule helper to this activity.
+     *
+     * @param viewId      The id of the view that was captured.
+     * @param viewText    (optional) Text that was in the view.
+     * @param packageName The name of the package / app for which the view was captured.
+     * @return created intent, use with setResult(intent).
+     */
+    public static Intent getResultIntent(String viewId, String viewText, String packageName) {
+        return new Intent()
+                .putExtra(EXTRA_VIEW_ID_KEY, viewId)
+                .putExtra(EXTRA_VIEW_TEXT_KEY, viewText)
+                .putExtra(EXTRA_PACKAGE_KEY, packageName);
+    }
+
+
+    /*
+     * Attributes
+     */
+
+    /**
+     * Data source to the rule database.
+     */
     protected RuleDataSource data;
+
+    /**
+     * The currently created or edited rule.
+     */
     protected Rule rule;
+
+    /**
+     * Flag to indicate if entered data in form is valid. Gets set in the valid*() methods.
+     */
     protected boolean formValid;
+
+    /**
+     * Launcher for the contract to get data from the rule helper activity.
+     */
+    private ActivityResultLauncher<Intent> getDataFromRuleHelperLauncher;
 
 
     /*
@@ -62,6 +112,12 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
         // Load rules from database.
         data = new RuleDataSource(getApplicationContext());
         data.addObserver(this);
+
+        // Initialize contract to start RuleHelperActivity and get a result back. Replacement for
+        // deprecated startActivityForResult().
+        getDataFromRuleHelperLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::setFormFromRuleHelperResult);
     }
 
     /**
@@ -79,15 +135,34 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
     }
 
     /**
+     * Called when the options menu is created.
+     *
+     * @param menu The menu to be created.
+     * @return always true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+        // Inflate the menu and add items to the action bar.
+        getMenuInflater().inflate(R.menu.menu_rule, menu);
+        return true;
+    }
+
+    /**
      * Called when the title bar is pressed.
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // If the back button is pressed, finish this activity.
         if (item.getItemId() == android.R.id.home) {
-            this.finish(); // plays an animation
+            // If the back button is pressed, finish this activity.
+            finish(); // plays an animation
+            return true;
+        } else if (item.getItemId() == R.id.action_help) {
+            // If the help button is pressed, start the rule helper activity and get data from it.
+            Intent intent = RuleHelperActivity.getStartActivityIntent(this);
+            getDataFromRuleHelperLauncher.launch(intent);
             return true;
         }
+        // Unknown item, let super handle it.
         return super.onOptionsItemSelected(item);
     }
 
@@ -316,6 +391,31 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
         rule.viewText = validateTextInput(R.id.textInputViewText, 0, 0, true);
         rule.actionType = validateActionTypeDropdown(R.id.dropdownActionType, R.id.dropdownActionTypeContainer,
                 R.string.rule_action_type_error, false);
+    }
+
+    /**
+     * Set the form values for app, id and text to the ones returned from the rule helper activity.
+     *
+     * @param result The result from the rule helper activity.
+     */
+    protected void setFormFromRuleHelperResult(ActivityResult result) {
+        Intent intent = result.getData();
+        if (result.getResultCode() != Activity.RESULT_OK || intent == null) {
+            return;
+        }
+        // Get the required data from the intent.
+        if (!intent.hasExtra(EXTRA_VIEW_ID_KEY) || !intent.hasExtra(EXTRA_PACKAGE_KEY)) {
+            throw new IllegalArgumentException("No valid data in result intent given.");
+        }
+        String viewId = intent.getStringExtra(EXTRA_VIEW_ID_KEY);
+        setTextInput(R.id.textInputViewId, viewId);
+        String packageName = intent.getStringExtra(EXTRA_PACKAGE_KEY);
+        setAppIdDropdown(R.id.dropdownApp, packageName);
+        // Get the optional data from the intent.
+        if (intent.hasExtra(EXTRA_VIEW_TEXT_KEY)) {
+            String viewText = intent.getStringExtra(EXTRA_VIEW_TEXT_KEY);
+            setTextInput(R.id.textInputViewText, viewText);
+        }
     }
 
 

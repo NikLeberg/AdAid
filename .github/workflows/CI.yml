@@ -1,0 +1,60 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build App
+    runs-on: ubuntu-20.04
+    container: nikolodion/android-ci:latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Make ./gradlew executable
+        run: chmod +x gradlew
+
+      - name: 🏗️ Build
+        run: ./gradlew assemble
+
+      - name: 🡅 Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: apks
+          path: app/build/outputs/apk
+
+  check:
+    name: Check App
+    runs-on: ubuntu-20.04
+    container: nikolodion/android-ci:latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Make ./gradlew executable
+        run: chmod +x gradlew
+
+      - name: ⁉ Setup problem matchers
+        uses: jonasb/android-problem-matchers-action@v1
+
+      - name: 🔍 Test
+        run: ./gradlew test
+
+      - name: 🔬 Lint
+        run: ./gradlew lint

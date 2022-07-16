@@ -28,7 +28,7 @@ import ch.bfh.adaid.service.A11yService;
  * Activity that implements a rule helper mechanism. On start it shows a dialog that allows the user
  * to enable the mechanism. On enabling, the activity minimizes the app and tells the a11y service
  * to start recording the screen layout. Also a notification is shown that when tapped tells the
- * a11y service to stop recording and send data to this minimizes activity. On reception it creates
+ * a11y service to stop recording and send data to this minimized activity. On reception it creates
  * a list of the views as seen in the recording. When the user clicks on such a list item / view,
  * the data it contains is sent back to the previous rule (create / edit) activity.
  *
@@ -113,6 +113,9 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
         overridePendingTransition(R.anim.fade_in, R.anim.slide_out_right);
     }
 
+    /**
+     * Called when the system stops the activity.
+     */
     @Override
     protected void onStop() {
         super.onStop();

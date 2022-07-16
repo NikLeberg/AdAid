@@ -37,7 +37,7 @@ import ch.bfh.adaid.gui.helper.RuleHelperActivity;
 public abstract class RuleActivity extends AppCompatActivity implements RuleObserver {
 
     /**
-     * Intent extra key for starting this activity. Put as value the rule to edit as long.
+     * Intent extra keys for sending data (viewId, viewText and packageName) to this activity.
      */
     public static final String EXTRA_VIEW_ID_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewId";
     public static final String EXTRA_VIEW_TEXT_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewText";

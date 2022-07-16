@@ -43,17 +43,21 @@ public class RuleHelperNotificationBuilder {
                 .setContentTitle(title)
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
-                .setOngoing(true)
                 .setAutoCancel(true);
         // Set intent that tells the a11y service to snapshot the current view layout. Lint
         // complains because content intents should start the UI or the app and not a service. But
         // here it is intended because the service needs to snapshot the current screen before it
         // will then start the activity. From a user perspective, the notification is still starting
         // the app.
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+        PendingIntent takeSnapshotIntent = PendingIntent.getService(context, 0,
                 A11yService.getTakeSnapshotIntent(context),
                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(takeSnapshotIntent);
+        // Allow the user to dismiss the notification. Instructs the a11y service to stop recording.
+        PendingIntent stopRecordingIntent = PendingIntent.getService(context, 1,
+                A11yService.getRecordingCommandIntent(context, false),
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        builder.setDeleteIntent(stopRecordingIntent);
         return builder.build();
     }
 

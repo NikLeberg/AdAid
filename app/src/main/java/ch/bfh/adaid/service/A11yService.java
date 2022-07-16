@@ -28,7 +28,7 @@ import ch.bfh.adaid.gui.helper.RuleHelperActivity;
 public class A11yService extends AccessibilityService implements RuleObserver {
 
     private static final String TAG = "A11yService";
-    private static final String EXTRA_START_RECORDING_KEY = "ch.bfh.adaid.service.A11yService.START_RECORDING";
+    private static final String EXTRA_RECORDING_COMMAND_KEY = "ch.bfh.adaid.service.A11yService.RECORDING_COMMAND";
     private static final String EXTRA_TAKE_SNAPSHOT_KEY = "ch.bfh.adaid.service.A11yService.TAKE_SNAPSHOT";
 
     /**
@@ -80,25 +80,27 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
-     * Creates intent that tells this a11y service to start recording the screen layout.
+     * Creates intent that tells this a11y service to start or stop the recording the screen layout.
      *
      * @param context Context of the application.
+     * @param start   True if the recording should start, false if it should stop.
      * @return created intent, use with startService(intent).
      */
-    public static Intent getStartRecordingIntent(Context context) {
+    public static Intent getRecordingCommandIntent(Context context, boolean start) {
         Intent intent = new Intent(context, A11yService.class);
-        intent.putExtra(EXTRA_START_RECORDING_KEY, true);
+        intent.putExtra(EXTRA_RECORDING_COMMAND_KEY, start);
         return intent;
     }
 
     /**
      * Creates intent that tells this a11y service to take a snapshot of the screen layout.
+     * This also automatically stops the recording.
      *
      * @param context Context of the application.
      * @return created intent, use with startService(intent).
      */
     public static Intent getTakeSnapshotIntent(Context context) {
-        Intent intent = new Intent(context, A11yService.class);
+        Intent intent = getRecordingCommandIntent(context, false);
         intent.putExtra(EXTRA_TAKE_SNAPSHOT_KEY, true);
         return intent;
     }
@@ -127,27 +129,21 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            // If we should start recording set flag and also set the service options so that events
-            // for all packages are received and not only for ones with existing rules.
-            boolean startRecording = intent.getBooleanExtra(EXTRA_START_RECORDING_KEY, false);
-            if (startRecording) {
-                isRecording = true;
-                AccessibilityServiceInfo info = getServiceInfo();
-                if (info != null) {
-                    // If the a11y service is not enabled in the settings, the info is null.
-                    info.packageNames = null;
-                    setServiceInfo(info);
-                }
-            }
-            // If we should take a snapshot and were recording before, reset the flag and start the
-            // helper activity. The activity also gets the snapshot in the intent.
+            // If we should take a snapshot and were recording before, send the recorded snapshot to
+            // the helper activity. This in turn also brings the activity to the front.
             boolean takeSnapshot = intent.getBooleanExtra(EXTRA_TAKE_SNAPSHOT_KEY, false);
             if (takeSnapshot && isRecording && lastViewTree != null) {
-                isRecording = false;
                 startActivity(RuleHelperActivity.getSetDataIntent(this, lastViewTree));
-                lastViewTree = null;
-                // Do limit the reception of a11y events again to events for packages with rules.
-                updateListenedPackages();
+            }
+            // If we should control the recording, set flag and also set the service options so that
+            // either events for all packages are received or only those with existing rules.
+            if (intent.hasExtra(EXTRA_RECORDING_COMMAND_KEY)) {
+                isRecording = intent.getBooleanExtra(EXTRA_RECORDING_COMMAND_KEY, false);
+                if (isRecording) {
+                    listenToAllPackages();
+                } else {
+                    listenToPackagesWithRules();
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -204,7 +200,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     /**
      * Update packages to listen for events in the accessibility service configuration.
      */
-    public void updateListenedPackages() {
+    private void listenToPackagesWithRules() {
         // The xml configuration {@link a11y_service_config.xml} has no default value for apps to
         // listen to. So we receive events for all apps. Optimize this by only listening to apps
         // that have rules.
@@ -218,6 +214,17 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         AccessibilityServiceInfo info = getServiceInfo();
         info.packageNames = packages.toArray(new String[0]);
         setServiceInfo(info);
+    }
+
+    /**
+     * Set service configuration to listen for accessibility events of all packages.
+     */
+    private void listenToAllPackages() {
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info != null) {
+            info.packageNames = null;
+            setServiceInfo(info);
+        }
     }
 
     /**
@@ -320,7 +327,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Rule has been added to the database, add it to the array list.
         rules.add(new RuleWithExtras(rule, this));
         // This rule may be the first for a specific app. Update listened apps.
-        updateListenedPackages();
+        listenToPackagesWithRules();
     }
 
     /**
@@ -337,6 +344,6 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Rule has been removed from the database, remove it from the array list.
         rules.removeIf(r -> r.r.id == rule.id);
         // This may have removed the last rule for a specific app. Update listened apps.
-        updateListenedPackages();
+        listenToPackagesWithRules();
     }
 }

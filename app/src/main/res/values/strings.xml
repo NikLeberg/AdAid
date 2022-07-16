@@ -47,6 +47,7 @@
     <string name="rule_helper_row_text_label">Text</string>
     <string name="rule_helper_row_id_label">Id</string>
     <string name="rule_helper_value_not_set">-- no id --</string>
+    <string name="rule_helper_cancel_message">Wrong usage sequence, helper mechanism was canceled. Please try again.</string>
 
     <!-- Strings used for rule helper dialog -->
     <string name="rule_helper_dialog_message">Finding the correct rule values is non trivial. You can activate a helper mechanism to help you find the <b>application name</b>, the <b>view id</b> and the <b>view text</b> for the rule. After activation, navigate to the app you want to find the values for and wait for the relevant view to become visible. As soon as it is visible, click the notification of this app to create a snapshot of the current view hierarchy. You\'ll automatically return back here where you can select for what element you want to create a rule.</string>

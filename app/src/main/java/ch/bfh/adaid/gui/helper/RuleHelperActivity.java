@@ -123,6 +123,22 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
         dismissHelpDialog();
     }
 
+
+    /**
+     * Called when the system reactivates the activity.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // If we are resuming, aren't showing the dialog and haven't received a view tree snapshot,
+        // the user did not comply with intended flow. Remove notification, show a toast and finish.
+        if (dialog == null && viewTree == null) {
+            NotificationManagerCompat.from(this).cancel(RuleHelperNotificationBuilder.NOTIFICATION_ID);
+            Toast.makeText(this, R.string.rule_helper_cancel_message, Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
     /**
      * Called on the reception of a intent while the activity is already running.
      *
@@ -233,7 +249,7 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(minimize);
         // Tell the a11y service to start recording snapshots.
-        Intent startRecording = A11yService.getStartRecordingIntent(this);
+        Intent startRecording = A11yService.getRecordingCommandIntent(this, true);
         startService(startRecording);
     }
 

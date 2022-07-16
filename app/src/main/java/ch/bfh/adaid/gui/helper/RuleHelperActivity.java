@@ -123,7 +123,6 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
         dismissHelpDialog();
     }
 
-
     /**
      * Called when the system reactivates the activity.
      */

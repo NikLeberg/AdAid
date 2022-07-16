@@ -33,8 +33,7 @@ public class FlattenedViewTree implements Serializable {
         packageName = root.getPackageName().toString();
         views = new ArrayList<>();
         flattenTree(root, 0);
-        // TODO: When the irrelevant children get removed, sometimes too much gets removed..?
-//        removeChildrenWithNoId();
+        removeEmptyChildren();
     }
 
     /**
@@ -55,14 +54,14 @@ public class FlattenedViewTree implements Serializable {
     }
 
     /**
-     * Remove children in the list that have no id and also have no children themselves.
+     * Remove children in the list that have no id and text and also have no children themselves.
      */
-    private void removeChildrenWithNoId() {
+    private void removeEmptyChildren() {
         ArrayList<SimpleView> toRemove = new ArrayList<>();
         for (int i = views.size() - 1; i >= 0; i--) {
             SimpleView view = views.get(i);
-            // If the view has no id, try to remove it if it has no children.
-            if (view.id.isEmpty()) {
+            // If the view has no id and no text, try to remove it if it has no children.
+            if (view.id.isEmpty() && view.text.isEmpty()) {
                 if (i == views.size() - 1) {
                     // If it is the last one, it is always save to remove it.
                     toRemove.add(view);

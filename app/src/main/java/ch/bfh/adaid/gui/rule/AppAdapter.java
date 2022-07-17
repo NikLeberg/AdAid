@@ -67,7 +67,7 @@ public class AppAdapter extends ArrayAdapter<String> {
                 names.add(applicationInfo.packageName);
             }
         }
-        return names.stream().toArray(String[]::new);
+        return names.toArray(new String[0]);
     }
 
 

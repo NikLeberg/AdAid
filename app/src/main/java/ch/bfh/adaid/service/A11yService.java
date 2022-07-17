@@ -17,6 +17,8 @@ import ch.bfh.adaid.action.SwipeAction;
 import ch.bfh.adaid.db.Rule;
 import ch.bfh.adaid.db.RuleDataSource;
 import ch.bfh.adaid.db.RuleObserver;
+import ch.bfh.adaid.gui.helper.FlattenedViewTree;
+import ch.bfh.adaid.gui.helper.RuleHelperActivity;
 
 /**
  * Accessibility service that executes the rules and its actions.
@@ -26,12 +28,25 @@ import ch.bfh.adaid.db.RuleObserver;
 public class A11yService extends AccessibilityService implements RuleObserver {
 
     private static final String TAG = "A11yService";
+    private static final String EXTRA_RECORDING_COMMAND_KEY = "ch.bfh.adaid.service.A11yService.RECORDING_COMMAND";
+    private static final String EXTRA_TAKE_SNAPSHOT_KEY = "ch.bfh.adaid.service.A11yService.TAKE_SNAPSHOT";
 
     /**
      * List of rules as they are stored in the database. Gets updated with the implemented observer
      * callbacks.
      */
     private final ArrayList<RuleWithExtras> rules = new ArrayList<>();
+
+    /**
+     * Flag to indicate if the service is currently recording the screen layout i.e. creating
+     * FlattenedViewTree objects.
+     */
+    private boolean isRecording = false;
+
+    /**
+     * While recording the screen layout, this attribute reflects the most up to date recording.
+     */
+    private FlattenedViewTree lastViewTree;
 
     /**
      * Checks if this service is enabled in the accessibility settings.
@@ -65,6 +80,32 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
+     * Creates intent that tells this a11y service to start or stop the recording the screen layout.
+     *
+     * @param context Context of the application.
+     * @param start   True if the recording should start, false if it should stop.
+     * @return created intent, use with startService(intent).
+     */
+    public static Intent getRecordingCommandIntent(Context context, boolean start) {
+        Intent intent = new Intent(context, A11yService.class);
+        intent.putExtra(EXTRA_RECORDING_COMMAND_KEY, start);
+        return intent;
+    }
+
+    /**
+     * Creates intent that tells this a11y service to take a snapshot of the screen layout.
+     * This also automatically stops the recording.
+     *
+     * @param context Context of the application.
+     * @return created intent, use with startService(intent).
+     */
+    public static Intent getTakeSnapshotIntent(Context context) {
+        Intent intent = getRecordingCommandIntent(context, false);
+        intent.putExtra(EXTRA_TAKE_SNAPSHOT_KEY, true);
+        return intent;
+    }
+
+    /**
      * Service lifecycle: The service is created by the system.
      */
     @Override
@@ -72,6 +113,40 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         super.onCreate();
         // Initialize possible actions.
         SwipeAction.initialize(getApplicationContext());
+    }
+
+    /**
+     * Service lifecycle: The service received a start command, i.e. intent.
+     * Used to communicate from activities -> service with intents.
+     * <p>
+     * Source: https://stackoverflow.com/a/41433717/16034014
+     *
+     * @param intent  Intent that was received.
+     * @param flags   Flags that were set in the intent.
+     * @param startId Unique integer representing a specific request to start.
+     * @return value from super implementation
+     */
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            // If we should take a snapshot and were recording before, send the recorded snapshot to
+            // the helper activity. This in turn also brings the activity to the front.
+            boolean takeSnapshot = intent.getBooleanExtra(EXTRA_TAKE_SNAPSHOT_KEY, false);
+            if (takeSnapshot && isRecording && lastViewTree != null) {
+                startActivity(RuleHelperActivity.getSetDataIntent(this, lastViewTree));
+            }
+            // If we should control the recording, set flag and also set the service options so that
+            // either events for all packages are received or only those with existing rules.
+            if (intent.hasExtra(EXTRA_RECORDING_COMMAND_KEY)) {
+                isRecording = intent.getBooleanExtra(EXTRA_RECORDING_COMMAND_KEY, false);
+                if (isRecording) {
+                    listenToAllPackages();
+                } else {
+                    listenToPackagesWithRules();
+                }
+            }
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     /**
@@ -104,8 +179,10 @@ public class A11yService extends AccessibilityService implements RuleObserver {
             Log.e(TAG, "Window root is null for event with source node: " + event.getSource());
             return;
         }
-//        // DEBUG
-//        walkNodeTree(root, 0);
+        // If we are recording the screen layout, take a snapshot of the current layout.
+        if (isRecording) {
+            doSnapshot(root);
+        }
         // Process all rules for this event.
         processRulesForEvent(event.getPackageName().toString(), root);
     }
@@ -123,7 +200,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     /**
      * Update packages to listen for events in the accessibility service configuration.
      */
-    public void updateListenedPackages() {
+    private void listenToPackagesWithRules() {
         // The xml configuration {@link a11y_service_config.xml} has no default value for apps to
         // listen to. So we receive events for all apps. Optimize this by only listening to apps
         // that have rules.
@@ -140,37 +217,14 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
-     * Walks the node tree and its children and prints it to the log.
-     *
-     * @param node  Node to start with.
-     * @param level Current level in the tree. Start with 0.
+     * Set service configuration to listen for accessibility events of all packages.
      */
-    private void walkNodeTree(AccessibilityNodeInfo node, int level) {
-        if (level == 0) {
-            System.out.println("----------------------------------------------------");
+    private void listenToAllPackages() {
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info != null) {
+            info.packageNames = null;
+            setServiceInfo(info);
         }
-        for (int i = 0; i < node.getChildCount(); i++) {
-            AccessibilityNodeInfo child = node.getChild(i);
-            if (child != null) {
-                printNodeInfo(child, level);
-                walkNodeTree(child, level + 1);
-            }
-        }
-    }
-
-    /**
-     * Prints the node info to the log.
-     *
-     * @param node  Node to print.
-     * @param level Current level in the tree.
-     */
-    private void printNodeInfo(AccessibilityNodeInfo node, int level) {
-        for (int i = 0; i < level; i++) {
-            System.out.print("  ");
-        }
-        String text = node.getText() != null ? node.getText().toString() : "";
-        System.out.format("Node: %s, Id: %s, Text: %s\n", node.getClassName(),
-                node.getViewIdResourceName(), text);
     }
 
     /**
@@ -240,6 +294,21 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
+     * Take a snapshot of the current screen / view hierarchy.
+     *
+     * @param root The root node of all accessibility nodes (i.e. the container view).
+     */
+    private void doSnapshot(AccessibilityNodeInfo root) {
+        // Convert node hierarchy to simplified and flattened list. But exclude the system ui.
+        String packageName = root.getPackageName().toString();
+        if (packageName.matches("com\\.android\\.system.*")) {
+            Log.d(TAG, "Skipping snapshotting of system package: " + packageName);
+            return;
+        }
+        lastViewTree = new FlattenedViewTree(root);
+    }
+
+    /**
      * RuleObserver interface: Called when a new rule is added.
      * <p>
      * Because this service doesn't need the fine granularity the RuleObserver has, we can mostly
@@ -258,7 +327,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Rule has been added to the database, add it to the array list.
         rules.add(new RuleWithExtras(rule, this));
         // This rule may be the first for a specific app. Update listened apps.
-        updateListenedPackages();
+        listenToPackagesWithRules();
     }
 
     /**
@@ -275,6 +344,6 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Rule has been removed from the database, remove it from the array list.
         rules.removeIf(r -> r.r.id == rule.id);
         // This may have removed the last rule for a specific app. Update listened apps.
-        updateListenedPackages();
+        listenToPackagesWithRules();
     }
 }

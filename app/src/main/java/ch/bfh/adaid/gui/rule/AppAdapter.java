@@ -29,7 +29,7 @@ import java.util.List;
  * - https://developer.android.com/training/package-visibility/declaring
  * - https://stackoverflow.com/questions/60679685/what-does-query-all-packages-permission-do
  *
- * @author Niklaus Leuenberger TLGINO
+ * @author Niklaus Leuenberger, TLGINO
  */
 public class AppAdapter extends ArrayAdapter<String> {
 

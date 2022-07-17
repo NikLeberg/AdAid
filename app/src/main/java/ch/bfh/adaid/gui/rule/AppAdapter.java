@@ -55,9 +55,10 @@ public class AppAdapter extends ArrayAdapter<String> {
     }
 
     /**
-     * Returns a list of names corresponding to the non-system file apps
-     * @param packages list of found packages
-     * @return String[] of package names
+     * Returns a list of names corresponding to the non-system file apps.
+     *
+     * @param packages List of found packages.
+     * @return String[] Array of package names.
      */
     public String[] sortPackages(List<ApplicationInfo> packages) {
         ArrayList<String> names = new ArrayList<>();

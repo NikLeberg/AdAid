@@ -71,7 +71,6 @@
         android:text="@string/rule_view_text_note" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputViewTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

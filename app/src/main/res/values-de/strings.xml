@@ -6,7 +6,7 @@
     <string name="a11y_service_not_enabled_message">Der bedienungshilfen Hintergrunddienst dieser App ist nicht aktiviert. Bitte in den Einstellungen aktivieren.</string>
     <string name="a11y_service_not_enabled_action">Einstellungen öffnen</string>
     <string name="rule_view_id">View Id</string>
-    <string name="rule_view_text">Zu suchender Text im View.</string>
+    <string name="rule_view_text">Zu suchender Text im View</string>
     <string name="action_swipe_left">Nach links wischen</string>
     <string name="action_swipe_right">Nach rechts wischen</string>
     <string name="action_swipe_up">Nach oben wischen</string>
@@ -27,7 +27,7 @@
     <string name="rule_edit_activity_title">Regel bearbeiten</string>
     <string name="rule_new_activity_title">Neue Regel erstellen</string>
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
-    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus. Klicken - Klickt auf das angegebene View. Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das angegebene view sichtbar ist.</string>
+    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box.</string>
     <string name="rule_helper_row_id_label">Id</string>
     <string name="rule_helper_activity_title">Regelhelfer</string>
     <string name="rule_helper_row_text_label">Text</string>

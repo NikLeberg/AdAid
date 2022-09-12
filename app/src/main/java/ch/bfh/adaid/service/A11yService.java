@@ -283,8 +283,6 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Check if the node text matches (as regex).
         String viewText = node.getText() == null ? "" : node.getText().toString();
         if (!rule.r.isMatchingViewText(viewText)) {
-            Log.d(TAG, "Rule " + rule.r.name + " with expected viewText " + rule.r.viewText +
-                    " does not match actual viewText: " + viewText);
             return;
         }
         // All conditions are met, execute seen action and mark it as triggered.

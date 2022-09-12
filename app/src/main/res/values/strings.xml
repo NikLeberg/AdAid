@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">AdAid</string>
 
-
     <!-- String representation of action types -->
     <!-- Keep in sync with ActionType -->
     <string name="action_swipe_left">Swipe left</string>
@@ -34,6 +33,7 @@
         <item>@string/action_click</item>
         <item>@string/action_mute</item>
     </string-array>
+    <string name="rule_action_type_note">Actions that can be triggered: Swipe (left/right/up/down) - Swipe in the given direction across the screen, Click - Click the view that matches the view id, Mute - Mute audio for as long as the matching view is visible, Block - Overlay a black bar over view.</string>
     <string name="rule_action_type_error">Please select an action type</string>
     <string name="rule_button_save">Save changes</string>
     <string name="rule_button_delete">Delete rule</string>
@@ -66,5 +66,4 @@
     <string name="a11y_service_description">An adblocker that utilizes accessibility service functionalities to react to ads in other apps.</string>
     <string name="a11y_service_not_enabled_message">The accessibility service of this app is disabled. Please enable it in the settings.</string>
     <string name="a11y_service_not_enabled_action">Open settings</string>
-    <string name="rule_action_type_note">Actions that can be triggered: Swipe (left/right/up/down) - Swipe in the given direction across the screen. Click - Click the view that matches the view id. Mute - Mute audio for as long as the matching view id is visible.</string>
 </resources>

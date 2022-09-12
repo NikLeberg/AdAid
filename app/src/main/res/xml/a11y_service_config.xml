@@ -4,7 +4,7 @@
     android:accessibilityEventTypes="typeWindowContentChanged"
     android:accessibilityFlags="flagDefault|flagReportViewIds|flagIncludeNotImportantViews"
     android:accessibilityFeedbackType="feedbackVisual"
-    android:notificationTimeout="10"
+    android:notificationTimeout="100"
     android:canRetrieveWindowContent="true"
     android:canPerformGestures="true"
     android:settingsActivity=".MainActivity"

@@ -1,18 +1,18 @@
 # AdAid - Advertisement Helper
-An Ad blocker that works as android accessibility background service and acts on behalf of the user with klicks, swipes or more in other apps.
-This was a group projects for the module _BTE5054 - Einstieg in OOP mit Java_. The general goal was to design an arbitrary android app that is build with object oriented principles. The task description (in german) can be found [here](./doc/Miniprojekt_EOOPJ_FS22.pdf). The design documentation (in german) can be found in the [doc](./doc) subfolder.
+An Ad blocker that works as android accessibility background service and acts on behalf of the user with clicks, swipes or more in other apps.
+This was a group projects for the module _BTE5054 - Einstieg in OOP mit Java_. The general goal was to design an arbitrary android app that is build with object oriented principles. The task description (in german) can be found [here](./doc/Miniprojekt_EOOPJ_FS22.pdf). The design documentation (in german) can be found in the [doc](./doc) subfolder. Please note that the documents therein are outdated as the project was extended after the hand-in.
 
 ## General Idea
-Android allows the creation of accessibility (further a11y) services. Those have great powers and even can inspect the screen content. This is mainly made for giving feedback to the user by voice or other means. See [Talk Back](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback) which uses this exact mechanism. The screen content is given to the a11y service as hierarchical node tree of view elements. Those elements have an id, a text content a type and a few other properties.
+Android allows the creation of accessibility (further called a11y) services. Those have great powers and even can inspect the screen content. This is mainly made for giving feedback to the user by voice or other means. See [Talk Back](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback) which uses this exact mechanism. The screen content is given to the a11y service as hierarchical node tree of view elements. Those elements have an id, a text content a type and a few other properties.
 
-While learning to program android apps we noticed that many items in android layout xml ressources get an id to programatically access them. Tests showed that the id one chooses for the layout view item is the same id that the a11y service gets in the node tree.
+While learning to program android apps we noticed that many items in android layout xml resources get an id to programmatically access them. Tests showed that the id one chooses for the layout view item is the same id that the a11y service gets in the node tree.
 
 The idea was now born to use these ids to act whenever a certain element is visible on the screen. For example to automatically swipe away instagram reel ads, to mute youtube ads and even click on the button to skip them.
 
-Even though this app its intented for ads its not limited to it. Are you for example using a useful app but it shows an annoying notification sometimes? Are you tired of performing a certain gesture all the time when using an app? AdAid can help with that!
+Even though this app its intended for ads its not limited to it. Are you for example using a useful app but it shows an annoying notification sometimes? Are you tired of performing a certain gesture all the time when using an app? AdAid can help with that!
 
 ## Requirements
-Minimum android SDK is `30` which is Android 11. Most of the features should work on earlier versions of android if compiled for them, but this isnt't tested.
+Minimum android SDK is `30` which is Android 11. Most of the features should work on earlier versions of android if compiled for them, but this isn't tested.
 
 ## Installation
 ToDo: Make apk available as GitHub release.

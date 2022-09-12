@@ -30,6 +30,8 @@ public class ActionFactory {
                 return new ClickAction(service);
             case ACTION_MUTE:
                 return new MuteAction(service);
+            case ACTION_BLOCK:
+                return new BlockAction(service);
             default:
                 throw new IllegalArgumentException("Unknown ActionType: " + type);
         }

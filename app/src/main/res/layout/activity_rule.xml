@@ -107,6 +107,24 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/rule_relative_path_note" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputRelativePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/rule_relative_path" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Container for buttons. -->
     <!-- Allows for a button width of "wrap_content" without also wrapping the text views. -->
     <LinearLayout

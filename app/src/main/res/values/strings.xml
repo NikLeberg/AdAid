@@ -9,6 +9,7 @@
     <string name="action_swipe_down">Swipe down</string>
     <string name="action_click">Click</string>
     <string name="action_mute">Mute</string>
+    <string name="action_block">Block</string>
 
     <!-- Strings used for activity rule -->
     <string name="rule_edit_activity_title">Edit rule</string>
@@ -32,9 +33,12 @@
         <item>@string/action_swipe_down</item>
         <item>@string/action_click</item>
         <item>@string/action_mute</item>
+        <item>@string/action_block</item>
     </string-array>
     <string name="rule_action_type_note">Actions that can be triggered: Swipe (left/right/up/down) - Swipe in the given direction across the screen, Click - Click the view that matches the view id, Mute - Mute audio for as long as the matching view is visible, Block - Overlay a black bar over view.</string>
     <string name="rule_action_type_error">Please select an action type</string>
+    <string name="rule_relative_path_note">Optional relative path to a view on which should be acted on. Encoding is as follows: p - one parent up, c[n] - to nth child (0 indexed), su - up a sibling, sd - down a sibling. These can be chained if written separated by a dot like: p.p.su.c[2]. Leave empty to act on the triggering view itself.</string>
+    <string name="rule_relative_path">Relative path</string>
     <string name="rule_button_save">Save changes</string>
     <string name="rule_button_delete">Delete rule</string>
     <string name="rule_db_error">Database error %s. Please try again.</string>

@@ -373,6 +373,7 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
         setTextInput(R.id.textInputViewId, rule.viewId);
         setTextInput(R.id.textInputViewText, rule.viewText);
         setActionTypeDropdown(R.id.dropdownActionType, rule.actionType);
+        setTextInput(R.id.textInputRelativePath, rule.relativePath);
     }
 
     /**
@@ -391,6 +392,7 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
         rule.viewText = validateTextInput(R.id.textInputViewText, 0, 0, true);
         rule.actionType = validateActionTypeDropdown(R.id.dropdownActionType, R.id.dropdownActionTypeContainer,
                 R.string.rule_action_type_error, false);
+        rule.relativePath = validateTextInput(R.id.textInputRelativePath, 0, 0, true);
     }
 
     /**

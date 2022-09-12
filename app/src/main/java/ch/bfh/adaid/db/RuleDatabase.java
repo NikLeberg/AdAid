@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase;
  *
  * @author Niklaus Leuenberger
  */
-@Database(entities = {Rule.class}, version = 1, exportSchema = false)
+@Database(entities = {Rule.class}, version = 1)
 public abstract class RuleDatabase extends RoomDatabase {
 
     /**
@@ -35,11 +35,9 @@ public abstract class RuleDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (RuleDatabase.class) {
                 if (INSTANCE == null) {
-                    // Instantiate / build the database if no instance exists yet. If the version of
-                    // the database changed, the database will be destructively updated.
+                    // Instantiate / build the database if no instance exists yet.
                     // TODO: Add migration logic. (https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929)
                     INSTANCE = Room.databaseBuilder(context, RuleDatabase.class, "rule_database")
-                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

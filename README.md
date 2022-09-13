@@ -15,7 +15,7 @@ Even though this app its intended for ads its not limited to it. Are you for exa
 Minimum android SDK is `30` which is Android 11. Most of the features should work on earlier versions of android if compiled for them, but this isn't tested.
 
 ## Installation
-ToDo: Make apk available as GitHub release.
+The latest build of AdAid is generally available as [GitHub release](https://github.com/NikLeberg/AdAid/releases). Download the `AdAid.apk` release asset to your phone and install it. How exactly non Google PlayStore apps can be installed varies from phone to phone. Most of the time opening the `.apk` file in a file manager is enough and will show a dialog box that asks if the app should be installed. Created rules from previous version should still work when updating. Please note that the releases are currently only debug builds.
 
 ## Usage
 The following paragraphs uses the notion of a _rule_. Rules are a way to customize the actions that this app is taking on behalf of the user. A rule consists of an app that will be controlled, the name of an layout element on screen to search for and an action to take when the given element is visible. More on rules later.

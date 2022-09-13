@@ -22,18 +22,31 @@ The following paragraphs uses the notion of a _rule_. Rules are a way to customi
 
 1. Launch app: You see an empty list of rules and a floating action button __+__. Also a notification at the bottom of the screen informs you that the accessibility background service of this app was not enabled yet. [<center><img src="./doc/images/screenshot_launch_app_empty.png" width="20%"/></center>](./doc/images/screenshot_launch_app_empty.png)
 2. Click on _Open settings_ of the notification to be taken to the settings and enable the a11y service that lights up briefly. Note that to work correctly this app needs access to the screen content. As such the permission to do so is requested when you enable the background a11y service. The screen content is only ever processed on device and never gets sent anywhere. This app has no internet connectivity!
-3. Return back to the app and click the __+__ button. A new activity starts that lets you create a new rule. [<center><img src="./doc/images/screenshot_create_new_rule.png" width="20%"/></center>](./doc/images/screenshot_create_new_rule.png)
+3. Return back to the app and click the __+__ button. A new activity starts that lets you create a new rule.
+    <center>
+    <p>
+    <img src="./doc/images/screenshot_create_new_rule1.png" width="20%"/>
+    &nbsp;
+    <img src="./doc/images/screenshot_create_new_rule2.png" width="20%"/>
+    </p>
+    </center>
 4. Fill in the details of the new rule.
     - Name: The name of the rule. Has no effect on the functionality and is only for you to differentiate between different rules.
     - Enabled: Rules can be enabled or disabled. Disabled rules will never trigger an action.
     - Application: Select the application for which the rule should act. The list contains every installed app on your phone. For convenience the app icon is also showed.
-    - View id: This is the tricky part. You probably don't have access to the android source code or the layout xml of the app you target. Maybe you could reverse engineer the apk file of it with tools like [dex2jar](https://github.com/pxb1988/dex2jar), [Apktool](https://ibotpeaches.github.io/Apktool/) or (Java Decompiler)[https://java-decompiler.github.io/]. Since the last update, a helper mechanism is integrated. See next paragraph for its usage.
+    - View id: This is the tricky part. You probably don't have access to the android source code or the layout xml of the app you target. Maybe you could reverse engineer the apk file of it with tools like [dex2jar](https://github.com/pxb1988/dex2jar), [Apktool](https://ibotpeaches.github.io/Apktool/) or [Java Decompiler](https://java-decompiler.github.io/). Since the last update, a helper mechanism is integrated. See next paragraph for its usage.
     - Text to search inside view: Optionally the rule can be made to only trigger when a specific text is found. This is useful when the target view is often visible but not always for _unwanted_ usages like ads. Supports regular expressions. Leave empty to trigger rule always.
     - Action: This is the action the a11y service is performing whenever the rule is triggered. Available are:
         - Swipe (left/right/up/down): Swipes in the given direction over 50% of the screen.
         - Click: Clicks on the nearest element on screen that in clickable.
         - Mute: As long as the triggering view id is found the media output is muted. After its gone, the media is automatically unmuted. If this somehow gets stuck, just press one of the volume buttons to unmute manually.
-    - Note: See the list further down for example rules that work.
+        - Block: Overlays a black bar over the triggering or a relative (see relative path below) view.
+    - Relative path: Optionally you may make the action to act on another view relative to the view that triggered the rule. For example to act on the second child of the grand-parent of the triggering node, enter "p.p.c[2]". The hierarchical display of the further below described rule helper mechanism can help in finding this path. The encoding is as follows, chain them separated with dots:
+        - p: move one parent up
+        - c[n]: move to nth child (0 indexed)
+        - su: move up a sibling
+        - sd: move down a sibling
+    - Note -> See the list further down for example rules that work.
 5. Safe the new rule by clicking on _Save changes_.
 6. The initial list of rules is showed again. But this time the list isn't empty but has the newly created rule. [<center><img src="./doc/images/screenshot_app_with_instagram_rule.png" width="20%"/></center>](./doc/images/screenshot_app_with_instagram_rule.png)
 - Tapping on the rule opens an activity to edit it in the same way as when the rule was created.
@@ -55,12 +68,13 @@ The rule helper is a small helper that allows you to easily create rules. It is 
 - Please note that not all views are represented in the hierarchy the a11y service receives from the android system. This could either be because the app implemented custom views that don't provide the recommended a11y information, or the view was deemed not important for a11y purposes and was left out explicitly by the app developer(s). For example the YouTube app and its new _Shorts_ video content: When instead of an actual short an advertisement is shown, the a11y information is incomplete / sparse and therefore it is not possible to detect and react to that. (Maybe that's intentional, but I don't know.)
 
 ### Example Rules
-| Name            | App                        | View id              | Text          | Action     | Note | See in action |
-|-----------------|----------------------------|----------------------|---------------|------------|------|---------------|
-| Instagram Story | com.instagram.android      | reel_viewer_subtitle | `Sponsored.*` | Swipe left | Swipes sponsored stories away. | [recording](./doc/videos/instagram.mp4) |
-| Instagram Reel  | com.instagram.android      | subtitle_text        | `Sponsored.*` | Swipe up   | Swipes sponsored reels away. |               |
-| YouTube Click   | com.google.android.youtube | skip_ad_button_text  | `.*[sS]kip.*` | Click      | As soon as the ad(s) can be skipped (~5 s) they are skipped. | [recording](./doc/videos/youtube.mp4) |
-| YouTube Mute    | com.google.android.youtube | ad_progress_text     |               | Mute       | For the duration of ad(s) the media output is muted. |               |
+| Name | App | View id | Text | Action | Relative path | Note | See in action |
+|---|---|---|---|---|---|---|---|
+| Instagram Story | com.instagram.android | reel_viewer_subtitle | `Sponsored.*` | Swipe left |  | Swipes sponsored stories away. | [recording](./doc/videos/instagram_story.mp4) |
+| Instagram Reel | com.instagram.android | subtitle_text | `Sponsored.*` | Swipe up |  | Swipes sponsored reels away. |  |
+| Instagram Feed | com.instagram.android | secondary_label | `Sponsored.*` | Block | p.sd | Blocks/overlays sponsored content in instagram feed. | [recording](./doc/videos/instagram_feed.mp4) |
+| YouTube Click | com.google.android.youtube | skip_ad_button_text | `.*[sS]kip.*` | Click |  | As soon as the ad(s) can be skipped (~5 s) they are skipped. | [recording](./doc/videos/youtube.mp4) |
+| YouTube Mute | com.google.android.youtube | ad_progress_text |  | Mute |  | For the duration of ad(s) the media output is muted. |  |
 
 ## License
 [MIT](LICENSE) © [N. Leuenberger](mailto:leuen4@bfh.ch), [A. Reusser](mailto:reusa1@bfh.ch).

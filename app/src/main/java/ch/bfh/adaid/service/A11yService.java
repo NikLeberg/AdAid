@@ -283,8 +283,12 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Check if the node text matches (as regex).
         String viewText = node.getText() == null ? "" : node.getText().toString();
         if (!rule.r.isMatchingViewText(viewText)) {
-            Log.d(TAG, "Rule " + rule.r.name + " with expected viewText " + rule.r.viewText +
-                    " does not match actual viewText: " + viewText);
+            return;
+        }
+        // Conditions to trigger are met, process the relative path if set.
+        node = processRelativePath(node, rule.r.relativePath);
+        if (node == null) {
+            Log.e(TAG, "Error while processing relative path: " + rule.r.relativePath);
             return;
         }
         // All conditions are met, execute seen action and mark it as triggered.
@@ -306,6 +310,104 @@ public class A11yService extends AccessibilityService implements RuleObserver {
             return;
         }
         lastViewTree = new FlattenedViewTree(root);
+    }
+
+    /**
+     * Process the optional relative path of the rule.
+     *
+     * @param node         Node that triggered the rule, starting point of relative path.
+     * @param relativePath The relative path from the rule.
+     * @return The relative node. Or null on error.
+     */
+    public AccessibilityNodeInfo processRelativePath(AccessibilityNodeInfo node, String relativePath) {
+        if (relativePath == null) {
+            return node;
+        }
+        for (String pathArg : relativePath.split("\\.")) {
+            if (pathArg.equals("p")) {
+                node = processRelativeParent(node);
+            } else if (pathArg.startsWith("c[")) {
+                node = processRelativeChild(node, pathArg);
+            } else if (pathArg.equals("su")) {
+                node = processRelativeSiblingUp(node);
+            } else if (pathArg.equals("sd")) {
+                node = processRelativeSiblingDown(node);
+            } else {
+                node = null;
+            }
+        }
+        return node;
+    }
+
+    /**
+     * Process the "p" relative path argument and move a parent up.
+     *
+     * @param node Child node.
+     * @return Parent node. Or null on error.
+     */
+    public AccessibilityNodeInfo processRelativeParent(AccessibilityNodeInfo node) {
+        return (node == null) ? null : node.getParent();
+    }
+
+    /**
+     * Process the "c[nth]" relative path argument and move to the nth child.
+     *
+     * @param node Parent node.
+     * @param arg  Relative path argument.
+     * @return The child at position n. Or null on error.
+     */
+    public AccessibilityNodeInfo processRelativeChild(AccessibilityNodeInfo node, String arg) {
+        if (node == null) {
+            return null;
+        }
+        try {
+            int i = Integer.parseInt(arg.replaceAll("[^0-9]", ""));
+            if (i >= 0 && node.getChildCount() > i) {
+                return node.getChild(i);
+            }
+        } catch (NumberFormatException ignore) {
+        }
+        return null;
+    }
+
+    /**
+     * Process the "su" relative path argument and move to the sibling one up.
+     *
+     * @param node Origin node.
+     * @return Sibling one up. Or null on error.
+     */
+    public AccessibilityNodeInfo processRelativeSiblingUp(AccessibilityNodeInfo node) {
+        if (node != null) {
+            // To get the sibling first go to the common parent and iterate over its children. When
+            // we find ourself we go one child back witch is the searched sibling.
+            AccessibilityNodeInfo p = processRelativeParent(node);
+            for (int i = 1; p != null && i < p.getChildCount(); ++i) {
+                if (node.equals(p.getChild(i))) {
+                    return p.getChild(i - 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Process the "sd" relative path argument and move to the sibling one down.
+     *
+     * @param node Origin node.
+     * @return Sibling one down. Or null on error.
+     */
+    public AccessibilityNodeInfo processRelativeSiblingDown(AccessibilityNodeInfo node) {
+        if (node != null) {
+            // To get the sibling first go to the common parent and iterate over its children. When
+            // we find ourself we go one child further witch is the searched sibling.
+            AccessibilityNodeInfo p = processRelativeParent(node);
+            for (int i = 0; p != null && i < p.getChildCount() - 1; ++i) {
+                if (node.equals(p.getChild(i))) {
+                    return p.getChild(i + 1);
+                }
+            }
+        }
+        return null;
     }
 
     /**

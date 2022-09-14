@@ -63,6 +63,19 @@ public class Rule {
     public ActionType actionType;
 
     /**
+     * Optional relative path to the view upon which should be acted.
+     *
+     * Encoding is as follows:
+     * - "p", move one parent up
+     * - "c[n]", move to nth child (0 indexed)
+     * - "su", move up a sibling
+     * - "sd", move down a sibling
+     * These can be chained if written separated by a dot like: "p.p.su.c[2]".
+     */
+    @ColumnInfo(name = "relative_path")
+    public String relativePath;
+
+    /**
      * Default constructor.
      */
     @Ignore
@@ -81,20 +94,22 @@ public class Rule {
     /**
      * Complete constructor.
      *
-     * @param name       The name of the rule.
-     * @param enabled    True if rule is enabled.
-     * @param appId      The app package name on which the rule applies.
-     * @param viewId     The view id for which should be searched for.
-     * @param viewText   Optional text that is inside searched view.
-     * @param actionType The action to be performed when the rule is triggered.
+     * @param name         The name of the rule.
+     * @param enabled      True if rule is enabled.
+     * @param appId        The app package name on which the rule applies.
+     * @param viewId       The view id for which should be searched for.
+     * @param viewText     Optional text that is inside searched view.
+     * @param actionType   The action to be performed when the rule is triggered.
+     * @param relativePath Optional relative path to the view upon which should be acted.
      */
-    public Rule(String name, boolean enabled, String appId, String viewId, String viewText, ActionType actionType) {
+    public Rule(String name, boolean enabled, String appId, String viewId, String viewText, ActionType actionType, String relativePath) {
         this.name = name;
         this.enabled = enabled;
         this.appId = appId;
         this.viewId = viewId;
         this.viewText = viewText;
         this.actionType = actionType;
+        this.relativePath = relativePath;
     }
 
     /**

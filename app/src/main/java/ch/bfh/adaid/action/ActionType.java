@@ -11,5 +11,6 @@ public enum ActionType {
     ACTION_SWIPE_UP,
     ACTION_SWIPE_DOWN,
     ACTION_CLICK,
-    ACTION_MUTE
+    ACTION_MUTE,
+    ACTION_BLOCK
 }

@@ -6,7 +6,7 @@
     <string name="a11y_service_not_enabled_message">Der bedienungshilfen Hintergrunddienst dieser App ist nicht aktiviert. Bitte in den Einstellungen aktivieren.</string>
     <string name="a11y_service_not_enabled_action">Einstellungen öffnen</string>
     <string name="rule_view_id">View Id</string>
-    <string name="rule_view_text">Zu suchender Text im View.</string>
+    <string name="rule_view_text">Zu suchender Text im View</string>
     <string name="action_swipe_left">Nach links wischen</string>
     <string name="action_swipe_right">Nach rechts wischen</string>
     <string name="action_swipe_up">Nach oben wischen</string>
@@ -27,7 +27,7 @@
     <string name="rule_edit_activity_title">Regel bearbeiten</string>
     <string name="rule_new_activity_title">Neue Regel erstellen</string>
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
-    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus. Klicken - Klickt auf das angegebene View. Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das angegebene view sichtbar ist.</string>
+    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box.</string>
     <string name="rule_helper_row_id_label">Id</string>
     <string name="rule_helper_activity_title">Regelhelfer</string>
     <string name="rule_helper_row_text_label">Text</string>
@@ -45,4 +45,7 @@
     <string name="rule_helper_notification_text" tools:ignore="Typos">Klicke auf diese Benachrichtigung wenn die View, für die die Werte gefunden werden sollten, sichtbar ist.</string>
     <string name="rule_helper_value_not_set">-- ohne Id --</string>
     <string name="rule_helper_cancel_message">Falsche Nutzungssequenz, Regelhelfer Mechanismus wurde abgebrochen. Bitte wiederholen.</string>
+    <string name="action_block">Blockieren</string>
+    <string name="rule_relative_path_note">Optionaler relativer Pfad zu einem view auf dessen die Aktion ausgeführt werden soll. Kodiert wie folgt: p - ein Parent hoch, c[n] - zum nten Child (0 indexiert), sd - ein Sibling runter, su - ein Sibling hoch. Diese könnten, getrennt von einem Punkt verkettet werden z.B.: p.p.su.c[2]. Leer lassen um auf dem auslösenden View selbst zu agieren.</string>
+    <string name="rule_relative_path">Relativer Pfad</string>
 </resources>

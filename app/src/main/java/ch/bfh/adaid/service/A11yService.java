@@ -320,7 +320,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
      * @return The relative node. Or null on error.
      */
     public AccessibilityNodeInfo processRelativePath(AccessibilityNodeInfo node, String relativePath) {
-        if (relativePath == null) {
+        if (relativePath == null || relativePath.isEmpty()) {
             return node;
         }
         for (String pathArg : relativePath.split("\\.")) {

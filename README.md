@@ -1,6 +1,10 @@
 # AdAid - Advertisement Helper
 An Ad blocker that works as android accessibility background service and acts on behalf of the user with clicks, swipes or more in other apps.
-This was a group projects for the module _BTE5054 - Einstieg in OOP mit Java_. The general goal was to design an arbitrary android app that is build with object oriented principles. The task description (in german) can be found [here](./doc/Miniprojekt_EOOPJ_FS22.pdf). The design documentation (in german) can be found in the [doc](./doc) subfolder. Please note that the documents therein are outdated as the project was extended after the hand-in.
+This was a group projects for the module _BTE5054 - Einstieg in OOP mit Java_. The general goal was to design an arbitrary android app that is build with object oriented principles. The task description (in german) can be found [here](./doc/Miniprojekt_EOOPJ_FS22.pdf). The initial design documentation (in german) can be found in the [doc](./doc) subfolder.
+
+## Example
+The following clip showcases what is possible with AdAid. While watching stories in Instagram intermittent ads are showed. AdAid detects the text _Gesponsert (Sponsored)_ in the title and swipes the ad(s) away.
+[<center><img src="./doc/videos/instagram_story.gif" width="15%"/></center>](./doc/videos/instagram_story.gif)
 
 ## General Idea
 Android allows the creation of accessibility (further called a11y) services. Those have great powers and even can inspect the screen content. This is mainly made for giving feedback to the user by voice or other means. See [Talk Back](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback) which uses this exact mechanism. The screen content is given to the a11y service as hierarchical node tree of view elements. Those elements have an id, a text content a type and a few other properties.
@@ -41,7 +45,7 @@ The following paragraphs uses the notion of a _rule_. Rules are a way to customi
         - Click: Clicks on the nearest element on screen that in clickable.
         - Mute: As long as the triggering view id is found the media output is muted. After its gone, the media is automatically unmuted. If this somehow gets stuck, just press one of the volume buttons to unmute manually.
         - Block: Overlays a black bar over the triggering or a relative (see relative path below) view.
-    - Relative path: Optionally you may make the action to act on another view relative to the view that triggered the rule. For example to act on the second child of the grand-parent of the triggering node, enter "p.p.c[2]". The hierarchical display of the further below described rule helper mechanism can help in finding this path. The encoding is as follows, chain them separated with dots:
+    - Relative path: Optionally you may make the action act on another view relative to the view that triggered the rule. For example to click on the grand-parent instead of the view itself, enter "p.p". The hierarchical display of the further below described rule helper mechanism can help in finding this path. The encoding is as follows, chain them separated with dots:
         - p: move one parent up
         - c[n]: move to nth child (0 indexed)
         - su: move up a sibling
@@ -65,15 +69,16 @@ The rule helper is a small helper that allows you to easily create rules. It is 
 7. The rule helper is brought to the foreground and presents you a list of all views (with id and text) that were visible on screen before the notification was tapped. The hierarchy of the views is represented with an increasing indentation. Not all views have a view id. Those that have none are listed with __--no id--__ and only serve the purpose of representing the hierarchy. [<center><img src="./doc/images/screenshot_helper_capture2.png" width="20%"/></center>](./doc/images/screenshot_helper_capture2.png)
 8. Select a view from the list and click on it. Selecting could be made with the strategy of looking at the text you saw in the app (for example _Skip Ad_) or for an id that has a meaningful name (for example _skip_ad_button_, [developers seem to be terribly honest :)]). For the Clock example we would choose the view with id _onoff_ as it seems to indicate a slider.
 9. After clicking the view in the list, the helper will close and you will be back at the rule edit or creation screen. But now the values for __app name__, __view id__ and __view text__ are filled in. In our example those values would be _com.android.deskclock_, _onoff_ and _OFF_.
+- In step 3 you could have also clicked on __use previous snapshot__ (if available i.e. not grayed out) and you would be sent directly to step 7. This is handy to test a few different ids and actions based on the same snapshot. Or also to look at the view hierarchy and figure out the relative path.
 - Please note that not all views are represented in the hierarchy the a11y service receives from the android system. This could either be because the app implemented custom views that don't provide the recommended a11y information, or the view was deemed not important for a11y purposes and was left out explicitly by the app developer(s). For example the YouTube app and its new _Shorts_ video content: When instead of an actual short an advertisement is shown, the a11y information is incomplete / sparse and therefore it is not possible to detect and react to that. (Maybe that's intentional, but I don't know.)
 
 ### Example Rules
 | Name | App | View id | Text | Action | Relative path | Note | See in action |
 |---|---|---|---|---|---|---|---|
-| Instagram Story | com.instagram.android | reel_viewer_subtitle | `Sponsored.*` | Swipe left |  | Swipes sponsored stories away. | [recording](./doc/videos/instagram_story.mp4) |
+| Instagram Story | com.instagram.android | reel_viewer_subtitle | `Sponsored.*` | Swipe left |  | Swipes sponsored stories away. | [recording](./doc/videos/instagram_story.gif) |
 | Instagram Reel | com.instagram.android | subtitle_text | `Sponsored.*` | Swipe up |  | Swipes sponsored reels away. |  |
-| Instagram Feed | com.instagram.android | secondary_label | `Sponsored.*` | Block | p.sd | Blocks/overlays sponsored content in instagram feed. | [recording](./doc/videos/instagram_feed.mp4) |
-| YouTube Click | com.google.android.youtube | skip_ad_button_text | `.*[sS]kip.*` | Click |  | As soon as the ad(s) can be skipped (~5 s) they are skipped. | [recording](./doc/videos/youtube.mp4) |
+| Instagram Feed | com.instagram.android | secondary_label | `Sponsored.*` | Block | p.sd | Blocks/overlays sponsored content in instagram feed. | [recording](./doc/videos/instagram_feed.gif) |
+| YouTube Click | com.google.android.youtube | skip_ad_button_text | `.*[sS]kip.*` | Click |  | As soon as the ad(s) can be skipped (~5 s) they are skipped. | [recording](./doc/videos/youtube.gif) |
 | YouTube Mute | com.google.android.youtube | ad_progress_text |  | Mute |  | For the duration of ad(s) the media output is muted. |  |
 
 ## License

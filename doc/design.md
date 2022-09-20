@@ -1,4 +1,5 @@
 # AdAid - Design
+Die folgene Dokumentation wurde für die Planung des Projekts resp. deren Abgabe erstellt. Nach der Abgabe wurde das Projekt um einige Funktionen wie z.B. Hilfsmechanismus oder weitere Aktionstypen erweitert. Diese Erweiterungen sind nicht in dieser Dokumentation nachgeführt.
 
 ## Klassendiagramme
 Im folgenden werden die implementierten Java Klassen in mehreren Klassendiagrammen dargestellt. Die Unterteilung des Klassendiagramms erfolgt auf Package Level und soll die Übersichtlichkeit verbessern. Vererbungen von Android-Framework spezifischen Klassen werden nicht angegeben. Dies aus dem Grund, dass die solchen Klassen sehr komplex im Aufbau sind aber dabei nicht viel zum Klassenverständnis beitragen. 

@@ -48,4 +48,5 @@
     <string name="action_block">Blockieren</string>
     <string name="rule_relative_path_note">Optionaler relativer Pfad zu einem view auf dessen die Aktion ausgeführt werden soll. Kodiert wie folgt: p - ein Parent hoch, c[n] - zum nten Child (0 indexiert), sd - ein Sibling runter, su - ein Sibling hoch. Diese könnten, getrennt von einem Punkt verkettet werden z.B.: p.p.su.c[2]. Leer lassen um auf dem auslösenden View selbst zu agieren.</string>
     <string name="rule_relative_path">Relativer Pfad</string>
+    <string name="rule_helper_reuse_error_message">Konnte die vorherige Aufnahme nicht verwenden. Bitte wiederholen.</string>
 </resources>

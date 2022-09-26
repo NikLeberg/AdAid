@@ -2,12 +2,14 @@ package ch.bfh.adaid.gui.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.IOException;
 
 import ch.bfh.adaid.R;
 import ch.bfh.adaid.gui.rule.RuleActivity;
@@ -37,6 +41,7 @@ import ch.bfh.adaid.service.A11yService;
 public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRecyclerViewAdapter.ItemClickListener {
 
     public static final String EXTRA_SNAPSHOT_KEY = "ch.bfh.adaid.gui.helper.RuleHelperActivity.EXTRA_SNAPSHOT_KEY";
+    private static final String PREFERENCE_SNAPSHOT_KEY = "ch.bfh.adaid.gui.helper.RuleHelperActivity.PREFERENCE_SNAPSHOT_KEY";
     private AlertDialog dialog; // if non null, the dialog is shown.
     private FlattenedViewTree viewTree; // if non null, the view tree is shown in the recycler view.
     private ViewTreeRecyclerViewAdapter adapter;
@@ -205,22 +210,21 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
                 .setNegativeButton(R.string.rule_helper_dialog_negative,
                         // Close this activity, user did not want to activate mechanism.
                         (dialog, which) -> finish())
-                // TODO: implement logic for last stored snapshot
-//                .setNeutralButton(R.string.rule_helper_dialog_neutral, (dialog, which) -> {
-//                })
+                .setNeutralButton(R.string.rule_helper_dialog_neutral,
+                        // Reuse the previously stored snapshot.
+                        (dialog, which) -> reusePreviousSnapshot())
                 .setCancelable(false)
                 .setOnDismissListener(dialog -> this.dialog = null);
         dialog = builder.create();
-        // TODO: implement logic for last stored snapshot
         // Disable the neutral button if no last snapshot is available. The button is disabled in
         // the onShow callback because it needs to have been created before it can be disabled.
         // Source: https://stackoverflow.com/q/568855/16034014
-//        dialog.setOnShowListener((d) -> {
-//            Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-//            if (button != null) {
-//                button.setEnabled(false);
-//            }
-//        });
+        dialog.setOnShowListener((d) -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            if (!getPreferences(Context.MODE_PRIVATE).contains(PREFERENCE_SNAPSHOT_KEY)) {
+                button.setEnabled(false);
+            }
+        });
         // Show the dialog.
         dialog.show();
     }
@@ -253,17 +257,54 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
     }
 
     /**
+     * Reuse the previous snapshot that was stored in shared preferences.
+     */
+    private void reusePreviousSnapshot() {
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        try {
+            String serializedSnapshot = preferences.getString(PREFERENCE_SNAPSHOT_KEY, "");
+            FlattenedViewTree viewTree = FlattenedViewTree.fromSerializedString(serializedSnapshot);
+            // Create a intent the same way the a11y service would create one. The service would
+            // then call startActivity() and the system would then call onNewIntent(). But this is
+            // not needed here as we can just call onNewIntent() directly.
+            Intent reuseIntent = getSetDataIntent(this, viewTree);
+            onNewIntent(reuseIntent);
+        } catch (IOException | ClassNotFoundException ignore) {
+            // If the deserialization failed then delete the preference. When it is missing then the
+            // dialog button to reuse is not showed. Also show toast to instruct the user to retry.
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove(PREFERENCE_SNAPSHOT_KEY).apply();
+            Toast.makeText(this, R.string.rule_helper_reuse_error_message, Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    /**
      * Processes a view tree snapshot intent. Received either directly from the a11y service or from
      * the activity on recreation due to device rotation.
      *
      * @param intent Intent with the view tree snapshot.
      */
     private void processSnapshotIntent(Intent intent) {
-
         // Get view tree from intent.
         viewTree = (FlattenedViewTree) intent.getSerializableExtra(EXTRA_SNAPSHOT_KEY);
         if (viewTree == null) {
             throw new IllegalArgumentException("No view tree given.");
+        }
+
+        // Save the viewTree as activity specific shared preference for reuse.
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        try {
+            String serializedViewTree = viewTree.toSerializedString();
+            editor.putString(PREFERENCE_SNAPSHOT_KEY, serializedViewTree).apply();
+        } catch (IOException e) {
+            // If the deserialization failed then delete the preference. When it is missing then the
+            // dialog button to reuse is not showed. Also show toast to instruct the user to retry.
+            editor.remove(PREFERENCE_SNAPSHOT_KEY);
+            Toast.makeText(this, R.string.rule_helper_reuse_error_message, Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
 
         // Set the name and icon of the app.

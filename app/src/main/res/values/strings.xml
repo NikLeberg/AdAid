@@ -22,7 +22,7 @@
     <string name="rule_view_id">View id</string>
     <string name="rule_view_id_note">The id of the view that should trigger the rule. Finding this is non trivial. Use the help mechanism (? icon, top right) to find it.</string>
     <string name="rule_view_id_error">Please enter a view id</string>
-    <string name="rule_view_text_note">What text should be inside the given view to trigger the rule. Supports regex. Leave empty to trigger rule regardless of text.</string>
+    <string name="rule_view_text_note">What text should be inside the given view (or its children) to trigger the rule. Supports regex. Leave empty to trigger rule regardless of text.</string>
     <string name="rule_view_text">Text to search inside view</string>
     <string name="rule_action_type">Action</string>
     <string-array name="rule_action_type_list">

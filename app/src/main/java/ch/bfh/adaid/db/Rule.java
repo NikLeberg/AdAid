@@ -143,6 +143,16 @@ public class Rule {
     }
 
     /**
+     * Check if rule has a non null and non empty vide text.
+     *
+     * @return true if rule has view text, false otherwise.
+     */
+    @Ignore
+    public boolean hasViewText() {
+        return viewText != null && !viewText.isEmpty();
+    }
+
+    /**
      * Checks if the viewText of the rule matches the given text.
      *
      * Comparison is case sensitive and is done using regex, so the text can contain wildcards and
@@ -154,7 +164,7 @@ public class Rule {
      */
     @Ignore
     public boolean isMatchingViewText(String text) {
-        if (viewText != null && !viewText.isEmpty()) {
+        if (hasViewText()) {
             return text.matches(viewText);
         } else {
             return true;

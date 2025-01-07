@@ -19,7 +19,7 @@
     <string name="rule_app">App</string>
     <string name="rule_app_error">Bitte eine App auswählen</string>
     <string name="rule_view_id_error">Bitte eine View Id eingeben</string>
-    <string name="rule_view_text_note">Was für ein Text im angegebenen View sein sollte um die Regel auszulösen. Unterstützt RegEx. Leer lassen um die Regel bei jeglichem Texinhalt auszulösen.</string>
+    <string name="rule_view_text_note">Was für ein Text im angegebenen View (oder Substruktur) sein sollte um die Regel auszulösen. Unterstützt RegEx. Leer lassen um die Regel bei jeglichem Textinhalt auszulösen.</string>
     <string name="rule_action_type">Aktion</string>
     <string name="rule_action_type_error">Bitte eine Aktion auswählen</string>
     <string name="rule_button_save">Änderungen speichern</string>

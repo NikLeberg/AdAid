@@ -265,7 +265,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
             rule.setTriggeredByCurrentEvent(false);
             return;
         }
-        // Only process the rule it has not been triggered yet.
+        // Only process the rule if it has not been triggered yet.
         if (rule.wasTriggeredByLastEvent()) {
             return;
         }
@@ -280,10 +280,9 @@ public class A11yService extends AccessibilityService implements RuleObserver {
      * @param node The node to process the rule for.
      */
     private void processRuleForNode(RuleWithExtras rule, AccessibilityNodeInfo node) {
-        // Check if the node text matches (as regex).
-        String viewText = node.getText() == null ? "" : node.getText().toString();
-        if (!rule.r.isMatchingViewText(viewText)) {
-            return;
+        // If rule specifies a view text, then we recursively check if the node text matches.
+        if (rule.r.hasViewText()) {
+            if (!isMatchingViewTextRecursive(rule, node)) return;
         }
         // Conditions to trigger are met, process the relative path if set.
         node = processRelativePath(node, rule.r.relativePath);
@@ -295,6 +294,25 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         Log.d(TAG, "Triggering (seen) rule " + rule.r.name);
         rule.setTriggeredByCurrentEvent(true);
         rule.action.triggerSeen(node);
+    }
+
+    /**
+     * Search recursively for a match of a node's view text to the given rule's text.
+     *
+     * @param rule The rule that a match is searched for.
+     * @param node The node that shall recursively be searched for the text.
+     * @return true if the rule matched the view text, false otherwise.
+     */
+    private boolean isMatchingViewTextRecursive(RuleWithExtras rule, AccessibilityNodeInfo node) {
+        if (node == null) return false;
+        if (node.getText() != null) {
+            if (rule.r.isMatchingViewText(node.getText().toString())) return true;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            AccessibilityNodeInfo child = node.getChild(i);
+            if (isMatchingViewTextRecursive(rule, child)) return true;
+        }
+        return false;
     }
 
     /**

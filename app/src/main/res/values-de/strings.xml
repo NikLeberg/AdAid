@@ -13,6 +13,7 @@
     <string name="action_swipe_down">Nach unten wischen</string>
     <string name="action_click">Klicken</string>
     <string name="action_mute">Stummschalten</string>
+    <string name="action_back">Zurückgehen</string>
     <string name="rule_name">Namen</string>
     <string name="rule_name_error">Bitte einen Namen eingeben</string>
     <string name="rule_enabled">Aktiviert</string>
@@ -27,7 +28,7 @@
     <string name="rule_edit_activity_title">Regel bearbeiten</string>
     <string name="rule_new_activity_title">Neue Regel erstellen</string>
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
-    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box.</string>
+    <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box, Zurückgehen - Navigiere zurück.</string>
     <string name="rule_helper_row_id_label">Id</string>
     <string name="rule_helper_activity_title">Regelhelfer</string>
     <string name="rule_helper_row_text_label">Text</string>

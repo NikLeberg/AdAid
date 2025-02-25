@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -58,18 +59,21 @@ public class BlockAction extends Action {
      */
     @Override
     public void triggerSeen(AccessibilityNodeInfo node) {
-        showOverlay();
-        updater = new OverlayUpdateHandler(this, node);
-        updater.sendEmptyMessage(OverlayUpdateHandler.RUN);
+        // only take action when updater hasn't been initialised yet
+        if(updater == null){
+            showOverlay();
+            updater = new OverlayUpdateHandler(this, node);
+            updater.sendEmptyMessage(OverlayUpdateHandler.RUN);
+        }
     }
 
     /**
-     * Trigger on gone missing of node. Remove overlay.
+     * Trigger on gone missing of node. Ignored because
+     * the update handler does a better job at it.
      */
     @Override
     public void triggerGone() {
-        updater.removeMessages(OverlayUpdateHandler.RUN);
-        removeOverlay();
+        Log.v(TAG, "ignoring triggerGone call");
     }
 
     /**
@@ -99,13 +103,8 @@ public class BlockAction extends Action {
      * Remove the overlay from the window manager.
      */
     private void removeOverlay() {
-        // This gets called from either the gone trigger or because the node got invalid while
-        // refreshing it during the update interval. Removing an already removed view raises an
-        // exception. We can just ignore it as it's already accomplished what we want.
-        try {
-            windowManager.removeView(overlay);
-        } catch (IllegalArgumentException ignore) {
-        }
+        windowManager.removeView(overlay);
+        updater = null;
     }
 
     /**

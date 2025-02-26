@@ -8,10 +8,12 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
 
@@ -90,8 +92,20 @@ public class BlockAction extends Action {
      * @param node a11y node for corresponding view that should be blocked.
      */
     private void updateOverlay(AccessibilityNodeInfo node) {
+        Rect maxBounds = windowManager.getMaximumWindowMetrics().getBounds();
+
         Rect boundsInScreen = new Rect();
         node.getBoundsInScreen(boundsInScreen);
+
+        if(boundsInScreen.width() <= 0 ||
+                boundsInScreen.height() <= 0 ||
+                boundsInScreen.width() > maxBounds.width() ||
+                boundsInScreen.height() > maxBounds.height())
+        {
+            Log.e(TAG, "invalid bounds, not updating overlay");
+            return;
+        }
+
         layoutParams.x = boundsInScreen.left;
         layoutParams.y = boundsInScreen.top;
         layoutParams.width = boundsInScreen.width();

@@ -15,7 +15,7 @@ public class BackAction extends Action {
     /**
      * Construct a new back action.
      *
-     * @param service The accessibility service. Used to change service configuration.
+     * @param service The accessibility service.
      */
     public BackAction(AccessibilityService service) {
         super(service);

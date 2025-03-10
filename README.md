@@ -45,6 +45,7 @@ The following paragraphs uses the notion of a _rule_. Rules are a way to customi
         - Click: Clicks on the nearest element on screen that in clickable.
         - Mute: As long as the triggering view id is found the media output is muted. After its gone, the media is automatically un-muted. If this somehow gets stuck, just press one of the volume buttons to un-mute manually.
         - Block: Overlays a black bar over the triggering or a relative (see relative path below) view.
+        - Back: Simulate a back button press / gesture.
     - Relative path: Optionally you may make the action act on another view relative to the view that triggered the rule. For example to click on the grand-parent instead of the view itself, enter "p.p". The hierarchical display of the further below described rule helper mechanism can help in finding this path. The encoding is as follows, chain them separated with dots:
         - p: move one parent up
         - c[n]: move to nth child (0 indexed)

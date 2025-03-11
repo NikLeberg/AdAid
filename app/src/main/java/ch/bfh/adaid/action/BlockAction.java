@@ -8,12 +8,10 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
 
@@ -21,7 +19,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * Action to block content on screen i.e. overlay a black box.
- *
+ * <p>
  * Source for basic overlay functionality: https://github.com/thbecker/android-accessibility-overlay
  *
  * @author Niklaus Leuenberger
@@ -30,6 +28,7 @@ public class BlockAction extends Action {
     private static final String TAG = "BlockAction";
 
     private final WindowManager windowManager;
+    private final Rect maxBounds;
     private final LinearLayout overlay;
     private final WindowManager.LayoutParams layoutParams;
     private OverlayUpdateHandler updater;
@@ -42,6 +41,7 @@ public class BlockAction extends Action {
     public BlockAction(AccessibilityService service) {
         super(service);
         windowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);
+        maxBounds = windowManager.getMaximumWindowMetrics().getBounds();
         // Construct the basic overlay as LinearLayout. The size and position gets set with
         // LayoutParams that are created and changed dynamically.
         overlay = new LinearLayout(service.getBaseContext());
@@ -61,8 +61,8 @@ public class BlockAction extends Action {
      */
     @Override
     public void triggerSeen(AccessibilityNodeInfo node) {
-        // only take action when updater hasn't been initialised yet
-        if(updater == null){
+        // Only take action when updater hasn't been initialised yet.
+        if (updater == null) {
             showOverlay();
             updater = new OverlayUpdateHandler(this, node);
             updater.sendEmptyMessage(OverlayUpdateHandler.RUN);
@@ -70,12 +70,11 @@ public class BlockAction extends Action {
     }
 
     /**
-     * Trigger on gone missing of node. Ignored because
-     * the update handler does a better job at it.
+     * Trigger on gone missing of node. Do nothing.
      */
     @Override
     public void triggerGone() {
-        Log.v(TAG, "ignoring triggerGone call");
+        // Do nothing. Update handler does a better job at it.
     }
 
     /**
@@ -92,16 +91,13 @@ public class BlockAction extends Action {
      * @param node a11y node for corresponding view that should be blocked.
      */
     private void updateOverlay(AccessibilityNodeInfo node) {
-        Rect maxBounds = windowManager.getMaximumWindowMetrics().getBounds();
-
         Rect boundsInScreen = new Rect();
         node.getBoundsInScreen(boundsInScreen);
 
-        if(boundsInScreen.width() <= 0 ||
-                boundsInScreen.height() <= 0 ||
-                boundsInScreen.width() > maxBounds.width() ||
-                boundsInScreen.height() > maxBounds.height())
-        {
+        if (boundsInScreen.width() <= 0
+                || boundsInScreen.height() <= 0
+                || boundsInScreen.width() > maxBounds.width()
+                || boundsInScreen.height() > maxBounds.height()) {
             Log.e(TAG, "invalid bounds, not updating overlay");
             return;
         }
@@ -123,7 +119,7 @@ public class BlockAction extends Action {
 
     /**
      * Handler to call the update of overlay every few ms.
-     *
+     * <p>
      * Source: https://stackoverflow.com/a/13100626/16034014
      */
     private static class OverlayUpdateHandler extends Handler {

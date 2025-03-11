@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,7 +19,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * Action to block content on screen i.e. overlay a black box.
- *
+ * <p>
  * Source for basic overlay functionality: https://github.com/thbecker/android-accessibility-overlay
  *
  * @author Niklaus Leuenberger
@@ -27,6 +28,7 @@ public class BlockAction extends Action {
     private static final String TAG = "BlockAction";
 
     private final WindowManager windowManager;
+    private final Rect maxBounds;
     private final LinearLayout overlay;
     private final WindowManager.LayoutParams layoutParams;
     private OverlayUpdateHandler updater;
@@ -39,6 +41,7 @@ public class BlockAction extends Action {
     public BlockAction(AccessibilityService service) {
         super(service);
         windowManager = (WindowManager) service.getSystemService(Context.WINDOW_SERVICE);
+        maxBounds = windowManager.getMaximumWindowMetrics().getBounds();
         // Construct the basic overlay as LinearLayout. The size and position gets set with
         // LayoutParams that are created and changed dynamically.
         overlay = new LinearLayout(service.getBaseContext());
@@ -58,18 +61,20 @@ public class BlockAction extends Action {
      */
     @Override
     public void triggerSeen(AccessibilityNodeInfo node) {
-        showOverlay();
-        updater = new OverlayUpdateHandler(this, node);
-        updater.sendEmptyMessage(OverlayUpdateHandler.RUN);
+        // Only take action when updater hasn't been initialised yet.
+        if (updater == null) {
+            showOverlay();
+            updater = new OverlayUpdateHandler(this, node);
+            updater.sendEmptyMessage(OverlayUpdateHandler.RUN);
+        }
     }
 
     /**
-     * Trigger on gone missing of node. Remove overlay.
+     * Trigger on gone missing of node. Do nothing.
      */
     @Override
     public void triggerGone() {
-        updater.removeMessages(OverlayUpdateHandler.RUN);
-        removeOverlay();
+        // Do nothing. Update handler does a better job at it.
     }
 
     /**
@@ -88,6 +93,15 @@ public class BlockAction extends Action {
     private void updateOverlay(AccessibilityNodeInfo node) {
         Rect boundsInScreen = new Rect();
         node.getBoundsInScreen(boundsInScreen);
+
+        if (boundsInScreen.width() <= 0
+                || boundsInScreen.height() <= 0
+                || boundsInScreen.width() > maxBounds.width()
+                || boundsInScreen.height() > maxBounds.height()) {
+            Log.e(TAG, "invalid bounds, not updating overlay");
+            return;
+        }
+
         layoutParams.x = boundsInScreen.left;
         layoutParams.y = boundsInScreen.top;
         layoutParams.width = boundsInScreen.width();
@@ -99,18 +113,13 @@ public class BlockAction extends Action {
      * Remove the overlay from the window manager.
      */
     private void removeOverlay() {
-        // This gets called from either the gone trigger or because the node got invalid while
-        // refreshing it during the update interval. Removing an already removed view raises an
-        // exception. We can just ignore it as it's already accomplished what we want.
-        try {
-            windowManager.removeView(overlay);
-        } catch (IllegalArgumentException ignore) {
-        }
+        windowManager.removeView(overlay);
+        updater = null;
     }
 
     /**
      * Handler to call the update of overlay every few ms.
-     *
+     * <p>
      * Source: https://stackoverflow.com/a/13100626/16034014
      */
     private static class OverlayUpdateHandler extends Handler {

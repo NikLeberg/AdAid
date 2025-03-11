@@ -45,6 +45,7 @@
     <string name="rule_button_delete">Delete rule</string>
     <string name="rule_db_error">Database error %s. Please try again.</string>
     <string name="rule_action_bar_help">Help finding values</string>
+    <string name="rule_fab_description">Add a rule</string>
 
     <!-- Strings for rule helper activity -->
     <string name="rule_helper_activity_title">Rule helper</string>

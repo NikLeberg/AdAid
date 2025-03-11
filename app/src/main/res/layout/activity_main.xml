@@ -10,7 +10,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/fab_offset_height"
+        tools:listitem="@layout/recyclerview_row" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -19,6 +22,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/double_margin"
         android:layout_marginBottom="@dimen/double_margin"
+        android:contentDescription="@string/rule_fab_description"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

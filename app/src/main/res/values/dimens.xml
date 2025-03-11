@@ -3,4 +3,6 @@
     <!-- 2x normal_margin -->
     <dimen name="double_margin">16dp</dimen>
     <dimen name="card_corner_radius">16dp</dimen>
+    <!-- 2x double_margin + 56dp (default FAB size) -->
+    <dimen name="fab_offset_height">88dp</dimen>
 </resources>

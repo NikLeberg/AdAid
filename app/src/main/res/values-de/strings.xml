@@ -31,6 +31,7 @@
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
     <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box, Zurückgehen - Navigiere zurück.</string>
     <string name="rule_helper_row_id_label">Id</string>
+    <string name="rule_fab_description">Eine Regel hinzufügen</string>
     <string name="rule_helper_activity_title">Regelhelfer</string>
     <string name="rule_helper_row_text_label">Text</string>
     <string name="rule_view_id_note">Die Id der View welche diese Regel auslösen soll. Dies ist nicht trivial zu finden. Benutze den Regelhelfer (? Symbol, oben rechts) um sie zu finden.</string>

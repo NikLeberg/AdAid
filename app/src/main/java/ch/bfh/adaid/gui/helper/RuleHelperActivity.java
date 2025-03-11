@@ -14,10 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +45,8 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
 
     public static final String EXTRA_SNAPSHOT_KEY = "ch.bfh.adaid.gui.helper.RuleHelperActivity.EXTRA_SNAPSHOT_KEY";
     private static final String PREFERENCE_SNAPSHOT_KEY = "ch.bfh.adaid.gui.helper.RuleHelperActivity.PREFERENCE_SNAPSHOT_KEY";
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private boolean allowResumeAfterPermissionRequest = false;
     private AlertDialog dialog; // if non null, the dialog is shown.
     private FlattenedViewTree viewTree; // if non null, the view tree is shown in the recycler view.
     private ViewTreeRecyclerViewAdapter adapter;
@@ -87,6 +92,10 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
 
         // Set correct animation for this activity.
         overridePendingTransition(R.anim.slide_in_right, R.anim.fade_out);
+
+        // Register callback for requesting notification permissions.
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(), this::processPermissionResult);
 
         // Either this activity is created for the first time and shows a help dialog, or it already
         // received a view hierarchy snapshot from the a11y service and is showing it. If the later,
@@ -134,13 +143,15 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
     @Override
     protected void onResume() {
         super.onResume();
-        // If we are resuming, aren't showing the dialog and haven't received a view tree snapshot,
-        // the user did not comply with intended flow. Remove notification, show a toast and finish.
-        if (dialog == null && viewTree == null) {
+        // If we are resuming, aren't showing the dialog, haven't received a view tree snapshot and
+        // aren't resuming because of a permission request, then the user did not comply with
+        // intended flow. Remove notification, show a toast and finish.
+        if (dialog == null && viewTree == null && !allowResumeAfterPermissionRequest) {
             NotificationManagerCompat.from(this).cancel(RuleHelperNotificationBuilder.NOTIFICATION_ID);
             Toast.makeText(this, R.string.rule_helper_cancel_message, Toast.LENGTH_LONG).show();
             finish();
         }
+        allowResumeAfterPermissionRequest = false;
     }
 
     /**
@@ -242,6 +253,14 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
      * Minimizes the activity to a notification and sets the a11y service to take snapshots.
      */
     private void minimizeToNotification() {
+        // Check for notification permissions and request if missing.
+        if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.POST_NOTIFICATIONS)) {
+            // Directly ask for permission. Result is sent to the registered ActivityResultCallback.
+            allowResumeAfterPermissionRequest = true;
+            requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS);
+            return;
+        }
         // Create and activate notification.
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(RuleHelperNotificationBuilder.NOTIFICATION_ID,
@@ -254,6 +273,20 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
         // Tell the a11y service to start recording snapshots.
         Intent startRecording = A11yService.getRecordingCommandIntent(this, true);
         startService(startRecording);
+    }
+
+    /**
+     * Called when the user responds to the permission request.
+     *
+     * @param isGranted True if the permission was granted, false otherwise.
+     */
+    private void processPermissionResult(Boolean isGranted) {
+        if (isGranted) {
+            minimizeToNotification();
+        } else {
+            Toast.makeText(this, R.string.rule_helper_notification_permission_deny_message, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     /**
@@ -287,7 +320,7 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
      */
     private void processSnapshotIntent(Intent intent) {
         // Get view tree from intent.
-        viewTree = (FlattenedViewTree) intent.getSerializableExtra(EXTRA_SNAPSHOT_KEY);
+        viewTree = intent.getSerializableExtra(EXTRA_SNAPSHOT_KEY, FlattenedViewTree.class);
         if (viewTree == null) {
             throw new IllegalArgumentException("No view tree given.");
         }
@@ -301,7 +334,7 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
         } catch (IOException e) {
             // If the deserialization failed then delete the preference. When it is missing then the
             // dialog button to reuse is not showed. Also show toast to instruct the user to retry.
-            editor.remove(PREFERENCE_SNAPSHOT_KEY);
+            editor.remove(PREFERENCE_SNAPSHOT_KEY).apply();
             Toast.makeText(this, R.string.rule_helper_reuse_error_message, Toast.LENGTH_LONG).show();
             finish();
             return;

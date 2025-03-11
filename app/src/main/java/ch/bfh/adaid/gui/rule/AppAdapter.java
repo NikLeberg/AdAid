@@ -62,10 +62,13 @@ public class AppAdapter extends ArrayAdapter<String> {
      */
     public String[] sortPackages(List<ApplicationInfo> packages) {
         ArrayList<String> names = new ArrayList<>();
-        for (ApplicationInfo applicationInfo : packages){
-            if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0){
-                names.add(applicationInfo.packageName);
-            }
+        for (ApplicationInfo applicationInfo : packages) {
+            // TODO: On OnePlus 8 filtering for non-system apps hides the YouTube App.
+            //       Maybe enable/disable filtering with a setting?
+            // if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+            //     names.add(applicationInfo.packageName);
+            // }
+            names.add(applicationInfo.packageName);
         }
         return names.toArray(new String[0]);
     }

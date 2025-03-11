@@ -1,5 +1,6 @@
 package ch.bfh.adaid.gui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -91,28 +92,38 @@ public class MainActivity extends AppCompatActivity implements RuleObserver, Rul
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void notifyRulesChanged() {
+        runOnUiThread(() -> {
+            adapter.notifyDataSetChanged();
+            // Show / hide the special "empty view".
+            View emptyView = findViewById(R.id.empty_view);
+            emptyView.setVisibility(rules.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+    }
+
     @Override
     public void onRuleLoad(List<Rule> rules) {
         this.rules.addAll(rules);
-        runOnUiThread(adapter::notifyDataSetChanged);
+        notifyRulesChanged();
     }
 
     @Override
     public void onRuleAdded(Rule rule) {
         rules.add(rule);
-        runOnUiThread(adapter::notifyDataSetChanged);
+        notifyRulesChanged();
     }
 
     @Override
     public void onRuleChanged(Rule rule) {
         rules.replaceAll(r -> r.id == rule.id ? rule : r);
-        runOnUiThread(adapter::notifyDataSetChanged);
+        notifyRulesChanged();
     }
 
     @Override
     public void onRuleRemoved(Rule rule) {
         rules.removeIf(r -> r.id == rule.id);
-        runOnUiThread(adapter::notifyDataSetChanged);
+        notifyRulesChanged();
     }
 
     @Override

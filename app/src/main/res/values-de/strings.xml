@@ -14,6 +14,7 @@
     <string name="action_click">Klicken</string>
     <string name="action_mute">Stummschalten</string>
     <string name="action_back">Zurückgehen</string>
+    <string name="action_block">Blockieren</string>
     <string name="rule_name">Namen</string>
     <string name="rule_name_error">Bitte einen Namen eingeben</string>
     <string name="rule_enabled">Aktiviert</string>
@@ -30,6 +31,8 @@
     <string name="rule_db_error">Datenbankfehler %s. Bitte erneut versuchen.</string>
     <string name="rule_action_type_note">Aktionen die ausgelöst werden können: Nach (links/rechts/oben/unten) wischen - Führt eine Wischgeste über den gesamten Bildschirm aus, Klicken - Klickt auf das View, Stummschalten - Schalte die Musikausgabe so lange auf stumm wie das View sichtbar ist, Blockieren - Überblendet das View mit einer schwarzen Box, Zurückgehen - Navigiere zurück.</string>
     <string name="rule_helper_row_id_label">Id</string>
+    <string name="rule_fab_description">Eine Regel hinzufügen</string>
+    <string name="rule_empty_view_text">Leer … noch keine Regeln konfiguriert.</string>
     <string name="rule_helper_activity_title">Regelhelfer</string>
     <string name="rule_helper_row_text_label">Text</string>
     <string name="rule_view_id_note">Die Id der View welche diese Regel auslösen soll. Dies ist nicht trivial zu finden. Benutze den Regelhelfer (? Symbol, oben rechts) um sie zu finden.</string>
@@ -41,13 +44,14 @@
     <string name="rule_helper_dialog_negative">Abbrechen</string>
     <string name="rule_helper_dialog_neutral">Vorherige Aufnahme verwenden</string>
     <string name="rule_helper_dialog_service_not_enabled">Bitte zuerst den Bedienungshilfendienst dieser App aktivieren.</string>
+    <string name="rule_helper_notification_permission_deny_message">Erlaubnis Benachrichtigungen zu zeigen wurde abgelehnt. Regelhelfer wird beendet.</string>
     <string name="rule_helper_notification_channel_name">Allgemein</string>
     <string name="rule_helper_notification_title">Regelhelfer</string>
     <string name="rule_helper_notification_text" tools:ignore="Typos">Klicke auf diese Benachrichtigung wenn die View, für die die Werte gefunden werden sollten, sichtbar ist.</string>
+    <string name="rule_helper_reuse_error_message">Konnte die vorherige Aufnahme nicht verwenden. Bitte wiederholen.</string>
     <string name="rule_helper_value_not_set">-- ohne Id --</string>
     <string name="rule_helper_cancel_message">Falsche Nutzungssequenz, Regelhelfer Mechanismus wurde abgebrochen. Bitte wiederholen.</string>
-    <string name="action_block">Blockieren</string>
     <string name="rule_relative_path_note">Optionaler relativer Pfad zu einem view auf dessen die Aktion ausgeführt werden soll. Kodiert wie folgt: p - ein Parent hoch, c[n] - zum nten Child (0 indexiert), sd - ein Sibling runter, su - ein Sibling hoch. Diese könnten, getrennt von einem Punkt verkettet werden z.B.: p.p.su.c[2]. Leer lassen um auf dem auslösenden View selbst zu agieren.</string>
     <string name="rule_relative_path">Relativer Pfad</string>
-    <string name="rule_helper_reuse_error_message">Konnte die vorherige Aufnahme nicht verwenden. Bitte wiederholen.</string>
+    <string name="no_rules_configured">No rules configured.</string>
 </resources>

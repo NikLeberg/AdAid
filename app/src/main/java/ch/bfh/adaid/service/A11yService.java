@@ -30,6 +30,7 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     private static final String TAG = "A11yService";
     private static final String EXTRA_RECORDING_COMMAND_KEY = "ch.bfh.adaid.service.A11yService.RECORDING_COMMAND";
     private static final String EXTRA_TAKE_SNAPSHOT_KEY = "ch.bfh.adaid.service.A11yService.TAKE_SNAPSHOT";
+    private static final String EXTRA_QUICK_TILE_ON_OFF_KEY = "ch.bfh.adaid.service.A11yService.QUICK_TILE_ON_OFF";
 
     /**
      * List of rules as they are stored in the database. Gets updated with the implemented observer
@@ -106,6 +107,20 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
+     * Creates intent that tells this a11y service to either enable or disable all rules.
+     * This is meant to be used by the quick tile.
+     *
+     * @param context Context of the application.
+     * @param on      True if all rules should be enabled, false if they should be disabled.
+     * @return created intent, use with startService(intent).
+     */
+    public static Intent getQuickTileOnOffIntent(Context context, boolean on) {
+        Intent intent = new Intent(context, A11yService.class);
+        intent.putExtra(EXTRA_QUICK_TILE_ON_OFF_KEY, on);
+        return intent;
+    }
+
+    /**
      * Service lifecycle: The service is created by the system.
      */
     @Override
@@ -143,6 +158,19 @@ public class A11yService extends AccessibilityService implements RuleObserver {
                     listenToAllPackages();
                 } else {
                     listenToPackagesWithRules();
+                }
+            }
+            // If we should enable or disable the service, do so.
+            if (intent.hasExtra(EXTRA_QUICK_TILE_ON_OFF_KEY)) {
+                boolean on = intent.getBooleanExtra(EXTRA_QUICK_TILE_ON_OFF_KEY, true);
+                if (on) {
+                    listenToPackagesWithRules();
+                } else {
+                    disableA11yEvents();
+                    // Ensure all rules are "gone" and will trigger correctly the next time around.
+                    for (RuleWithExtras rule : rules) {
+                        triggerGone(rule);
+                    }
                 }
             }
         }
@@ -210,19 +238,36 @@ public class A11yService extends AccessibilityService implements RuleObserver {
                 packages.add(rule.r.appId);
             }
         }
-        Log.d(TAG, "updateListenedPackages: now listening to: " + packages);
+        Log.d(TAG, "listening to events from packages: " + packages);
         AccessibilityServiceInfo info = getServiceInfo();
-        info.packageNames = packages.toArray(new String[0]);
-        setServiceInfo(info);
+        if (info != null) {
+            info.packageNames = packages.toArray(new String[0]);
+            info.eventTypes = AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+            setServiceInfo(info);
+        }
     }
 
     /**
      * Set service configuration to listen for accessibility events of all packages.
      */
     private void listenToAllPackages() {
+        Log.d(TAG, "listening to events from all packages");
         AccessibilityServiceInfo info = getServiceInfo();
         if (info != null) {
             info.packageNames = null;
+            info.eventTypes = AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED;
+            setServiceInfo(info);
+        }
+    }
+
+    /**
+     * Disable listening for accessibility events.
+     */
+    private void disableA11yEvents() {
+        Log.d(TAG, "disabling listening to events");
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info != null) {
+            info.eventTypes = 0;
             setServiceInfo(info);
         }
     }
@@ -255,14 +300,9 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         // Search for the node(s) that match the rule.
         List<AccessibilityNodeInfo> nodes = root.findAccessibilityNodeInfosByViewId(rule.r.getCompleteViewId());
         // Actions only make sense if just one single node is found. So ignore events when multiple
-        // nodes are found. But as this event is now ignored, also reset the triggered flag and
-        // potentially run gone action if previous event contained the node i.e. triggered the rule.
+        // or no nodes are found.
         if (nodes.size() != 1) {
-            if (rule.wasTriggeredByLastEvent()) {
-                Log.d(TAG, "Triggering (gone) rule " + rule.r.name);
-                rule.action.triggerGone();
-            }
-            rule.setTriggeredByCurrentEvent(false);
+            triggerGone(rule);
             return;
         }
         // Only process the rule if it has not been triggered yet.
@@ -291,9 +331,35 @@ public class A11yService extends AccessibilityService implements RuleObserver {
             return;
         }
         // All conditions are met, execute seen action and mark it as triggered.
+        triggerSeen(rule, node);
+    }
+
+    /**
+     * Trigger seen action for the rule.
+     *
+     * @param rule The rule to trigger.
+     * @param node The node to trigger the rule for.
+     */
+    private void triggerSeen(RuleWithExtras rule, AccessibilityNodeInfo node) {
+        // Trigger and mark as triggered to avoid triggering again.
         Log.d(TAG, "Triggering (seen) rule " + rule.r.name);
         rule.setTriggeredByCurrentEvent(true);
         rule.action.triggerSeen(node);
+    }
+
+    /**
+     * Trigger gone action for the rule.
+     *
+     * @param rule The rule to trigger.
+     */
+    private void triggerGone(RuleWithExtras rule) {
+        // Reset the triggered flag and potentially run gone action if previous event contained the
+        // node i.e. triggered the rule.
+        if (rule.wasTriggeredByLastEvent()) {
+            Log.d(TAG, "Triggering (gone) rule " + rule.r.name);
+            rule.action.triggerGone();
+        }
+        rule.setTriggeredByCurrentEvent(false);
     }
 
     /**

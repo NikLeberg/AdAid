@@ -52,7 +52,7 @@
         </service>
 
         <service
-            android:name=".settings.A11yTileService"
+            android:name=".settings.EnablementTileService"
             android:exported="true"
             android:icon="@drawable/ic_launcher_foreground"
             android:label="@string/app_name"

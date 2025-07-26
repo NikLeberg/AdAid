@@ -45,6 +45,11 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     private boolean isRecording = false;
 
     /**
+     * Flag to indicate if the service should take the next possible snapshot of the screen layout.
+     */
+    private boolean takeNextSnapshot = false;
+
+    /**
      * While recording the screen layout, this attribute reflects the most up to date recording.
      */
     private FlattenedViewTree lastViewTree;
@@ -107,6 +112,19 @@ public class A11yService extends AccessibilityService implements RuleObserver {
     }
 
     /**
+     * Creates intent that tells this a11y service to take the next possible snapshot of the screen.
+     * This is meant to be used by the quick tile.
+     *
+     * @param context Context of the application.
+     * @return created intent, use with startService(intent).
+     */
+    public static Intent getTakeNextSnapshotIntent(Context context) {
+        Intent intent = getRecordingCommandIntent(context, true);
+        intent.putExtra(EXTRA_TAKE_SNAPSHOT_KEY, true);
+        return intent;
+    }
+
+    /**
      * Creates intent that tells this a11y service to either enable or disable all rules.
      * This is meant to be used by the quick tile.
      *
@@ -146,9 +164,12 @@ public class A11yService extends AccessibilityService implements RuleObserver {
         if (intent != null) {
             // If we should take a snapshot and were recording before, send the recorded snapshot to
             // the helper activity. This in turn also brings the activity to the front.
+            // If we are not already recording, set flag to use the next available snapshot.
             boolean takeSnapshot = intent.getBooleanExtra(EXTRA_TAKE_SNAPSHOT_KEY, false);
             if (takeSnapshot && isRecording && lastViewTree != null) {
                 startActivity(RuleHelperActivity.getSetDataIntent(this, lastViewTree));
+            } else if (takeSnapshot && !isRecording) {
+                takeNextSnapshot = true;
             }
             // If we should control the recording, set flag and also set the service options so that
             // either events for all packages are received or only those with existing rules.
@@ -394,6 +415,13 @@ public class A11yService extends AccessibilityService implements RuleObserver {
             return;
         }
         lastViewTree = new FlattenedViewTree(root);
+        // If we should take the next possible snapshot, forward the just taken one to the helper.
+        if (takeNextSnapshot) {
+            takeNextSnapshot = false;
+            isRecording = false;
+            listenToPackagesWithRules();
+            startActivity(RuleHelperActivity.getSetDataIntent(this, lastViewTree));
+        }
     }
 
     /**

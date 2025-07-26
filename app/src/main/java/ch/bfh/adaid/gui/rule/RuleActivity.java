@@ -49,10 +49,10 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
      * @param viewId      The id of the view that was captured.
      * @param viewText    (optional) Text that was in the view.
      * @param packageName The name of the package / app for which the view was captured.
-     * @return created intent, use with setResult(intent).
+     * @return created intent, use with setResult(intent) or startActivity(intent).
      */
-    public static Intent getResultIntent(String viewId, String viewText, String packageName) {
-        return new Intent()
+    public static Intent getHelperIntent(String viewId, String viewText, String packageName) {
+        return new Intent(INTENT_ACTION)
                 .putExtra(EXTRA_VIEW_ID_KEY, viewId)
                 .putExtra(EXTRA_VIEW_TEXT_KEY, viewText)
                 .putExtra(EXTRA_PACKAGE_KEY, packageName);

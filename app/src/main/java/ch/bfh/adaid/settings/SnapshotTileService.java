@@ -10,13 +10,15 @@ import ch.bfh.adaid.service.A11yService;
 /**
  * A Quick Tile that when clicked commands the A11yService to immediately take the next valid
  * snapshot.
- *
+ * <p>
  * Order of actions:
- *  1. Quick Tile is clicked, Intent is sent to A11yService.
- *  2. A11yService enables "next snapshot" mode and starts recording the screen layout.
- *  3. Once a valid (i.e. not the launcher) recording has been made it is immediately forwarded to
- *     the rule helper.
- *  4. Rule helper is brought to the foreground and displays the captured snapshot as usual.
+ * <ol>
+ *     <li>Quick Tile is clicked, Intent is sent to A11yService.</li>
+ *     <li>A11yService enables "next snapshot" mode and starts recording the screen layout.</li>
+ *     <li>Once a valid (i.e. not the launcher) recording has been made it is immediately forwarded
+ *         to the rule helper.</li>
+ *     <li>Rule helper is brought to the foreground and displays captured snapshot as usual.</li>
+ *  </ol>
  *
  * @author Niklaus Leuenberger
  */

@@ -16,7 +16,8 @@ import ch.bfh.adaid.service.A11yService;
 /**
  * Builds a notification that tells the a11y service to snapshot the current view layout.
  * <p>
- * Source: https://developer.android.com/training/notify-user/build-notification
+ * Source:
+ * <a href="https://developer.android.com/training/notify-user/build-notification">Create a notification</a>
  *
  * @author Niklaus Leuenberger
  */

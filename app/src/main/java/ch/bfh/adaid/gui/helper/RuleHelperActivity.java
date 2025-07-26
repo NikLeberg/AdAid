@@ -160,7 +160,7 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
      * @param intent New intent from the a11y service with the captured view tree snapshot.
      */
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         // If the intent contains a view tree snapshot, process it and store the intent in the

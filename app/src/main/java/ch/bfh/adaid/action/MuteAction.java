@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Action to mute the music audio stream while the triggering node is visible.
- *
+ * <p>
  * Note that muting can be easily dismissed / deactivated if the user presses a volume +/- button.
  *
  * @author Niklaus Leuenberger

@@ -15,12 +15,15 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+
 import java.lang.ref.WeakReference;
 
 /**
  * Action to block content on screen i.e. overlay a black box.
  * <p>
- * Source for basic overlay functionality: https://github.com/thbecker/android-accessibility-overlay
+ * Source for basic overlay functionality:
+ * <a href="https://github.com/thbecker/android-accessibility-overlay">thbecker/android-accessibility-overlay</a>
  *
  * @author Niklaus Leuenberger
  */
@@ -120,7 +123,8 @@ public class BlockAction extends Action {
     /**
      * Handler to call the update of overlay every few ms.
      * <p>
-     * Source: https://stackoverflow.com/a/13100626/16034014
+     * Source:
+     * <a href="https://stackoverflow.com/a/13100626/16034014">Making a interval timer in Java android by @Chris.Jenkins</a>
      */
     private static class OverlayUpdateHandler extends Handler {
 
@@ -136,7 +140,8 @@ public class BlockAction extends Action {
 
         /**
          * Access the outer class only through a weak reference. This eliminates a leak as discussed
-         * here: https://stackoverflow.com/q/11407943/16034014
+         * here:
+         * <a href="https://stackoverflow.com/q/11407943/16034014">This Handler class should be static or leaks might occur: IncomingHandler</a>
          */
         private final WeakReference<BlockAction> blockActionReference;
 
@@ -160,7 +165,7 @@ public class BlockAction extends Action {
          * @param msg Ignored, should always be RUN (= 0).
          */
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NonNull Message msg) {
             // A11y nodes can be refreshed outside of the usual service events. This is used here to
             // continuously update the position and size of the node and place the overlay
             // accordingly. If a node is no longer visible the refresh returns false and the update

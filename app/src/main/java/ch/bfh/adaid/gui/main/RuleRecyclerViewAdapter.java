@@ -1,4 +1,3 @@
-
 package ch.bfh.adaid.gui.main;
 
 import android.content.Context;
@@ -20,8 +19,9 @@ import ch.bfh.adaid.db.Rule;
 /**
  * RuleRecyclerViewAdapter is the adapter for the RecyclerView in the MainActivity. It has a list of
  * rules and is responsible for the layout of the RecyclerView.
- *
- * Source: https://stackoverflow.com/a/40584425/16034014
+ * <p>
+ * Source:
+ * <a href="https://stackoverflow.com/a/40584425/16034014">Simple Android RecyclerView example by @Suragch</a>
  *
  * @author Adrian Reusser
  */
@@ -62,8 +62,8 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView myTextView;
-        SwitchMaterial mySwitch;
+        final TextView myTextView;
+        final SwitchMaterial mySwitch;
 
         ViewHolder(View itemView) {
             super(itemView);

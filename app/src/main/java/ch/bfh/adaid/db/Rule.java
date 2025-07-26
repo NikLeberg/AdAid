@@ -43,7 +43,7 @@ public class Rule {
 
     /**
      * View id for which should be searched for.
-     *
+     * <p>
      * Note: Common prefixes needn't be added to the view id.
      * --> Not "com.instagram.android:id/reel_viewer_subtitle" but just "reel_viewer_subtitle".
      */
@@ -64,7 +64,7 @@ public class Rule {
 
     /**
      * Optional relative path to the view upon which should be acted.
-     *
+     * <p>
      * Encoding is as follows:
      * - "p", move one parent up
      * - "c[n]", move to nth child (0 indexed)
@@ -79,7 +79,8 @@ public class Rule {
      * Default constructor.
      */
     @Ignore
-    public Rule() {}
+    public Rule() {
+    }
 
     /**
      * Simple constructor, mainly used for testing.
@@ -154,7 +155,7 @@ public class Rule {
 
     /**
      * Checks if the viewText of the rule matches the given text.
-     *
+     * <p>
      * Comparison is case sensitive and is done using regex, so the text can contain wildcards and
      * the full regex syntax.
      * If a rule has no viewText, the text is by definition always matched.

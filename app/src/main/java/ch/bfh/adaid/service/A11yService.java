@@ -152,7 +152,8 @@ public class A11yService extends AccessibilityService implements RuleObserver {
      * Service lifecycle: The service received a start command, i.e. intent.
      * Used to communicate from activities -> service with intents.
      * <p>
-     * Source: https://stackoverflow.com/a/41433717/16034014
+     * Source:
+     * <a href="https://stackoverflow.com/a/41433717/16034014">How to send data back from Activity to AccessibilityService? by @Giuseppe Raddato</a>
      *
      * @param intent  Intent that was received.
      * @param flags   Flags that were set in the intent.

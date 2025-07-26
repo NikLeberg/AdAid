@@ -11,11 +11,12 @@ import androidx.room.RoomDatabase;
  * Room database. Class is a singleton as each database instance has a heavy
  * cost on resources.
  * <p>
- * Source: https://developer.android.com/codelabs/android-room-with-a-view#7
+ * Source:
+ * <a href="https://developer.android.com/codelabs/android-room-with-a-view#7">codelabs/android-room-with-a-view</a>
  *
  * @author Niklaus Leuenberger
  */
-@Database(entities = { Rule.class }, version = 2, autoMigrations = {
+@Database(entities = {Rule.class}, version = 2, autoMigrations = {
         @AutoMigration(from = 1, to = 2)
 })
 public abstract class RuleDatabase extends RoomDatabase {

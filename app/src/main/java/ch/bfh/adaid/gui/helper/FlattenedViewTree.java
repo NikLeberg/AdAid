@@ -23,12 +23,12 @@ public class FlattenedViewTree implements Serializable {
     /**
      * Package id / app name for which this view tree was created.
      */
-    public String packageName;
+    public final String packageName;
 
     /**
      * List of the simplified views.
      */
-    public ArrayList<SimpleView> views;
+    public final ArrayList<SimpleView> views;
 
     /**
      * Construct a view tree. This recursively traverses the tree and populates the list.

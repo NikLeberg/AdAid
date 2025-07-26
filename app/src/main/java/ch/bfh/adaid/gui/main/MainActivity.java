@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements RuleObserver, Rul
 
     RuleRecyclerViewAdapter adapter;
     private RuleDataSource data;
-    ArrayList<Rule> rules = new ArrayList<>();
+    final ArrayList<Rule> rules = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

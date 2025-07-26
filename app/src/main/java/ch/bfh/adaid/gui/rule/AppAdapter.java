@@ -22,12 +22,12 @@ import java.util.List;
  * corresponding icon of the app / package is displayed.
  * <p>
  * Sources on how to implement and customize an ArrayAdapter:
- * - https://stackoverflow.com/questions/5867312/spinner-with-text-and-icons
- * - https://developer.android.com/reference/android/widget/ArrayAdapter
+ * - <a href="https://stackoverflow.com/questions/5867312/spinner-with-text-and-icons">Spinner with text and icons</a>
+ * - <a href="https://developer.android.com/reference/android/widget/ArrayAdapter">ArrayAdapter</a>
  * <p>
  * Sources on how to get the package names of installed apps.
- * - https://developer.android.com/training/package-visibility/declaring
- * - https://stackoverflow.com/questions/60679685/what-does-query-all-packages-permission-do
+ * - <a href="https://developer.android.com/training/package-visibility/declaring">Declare package visibility needs</a>
+ * - <a href="https://stackoverflow.com/questions/60679685/what-does-query-all-packages-permission-do">What does QUERY_ALL_PACKAGES permission do?</a>
  *
  * @author Niklaus Leuenberger, TLGINO
  */

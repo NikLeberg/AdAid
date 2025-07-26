@@ -79,5 +79,4 @@
 
     <!-- Strings used for settings -->
     <string name="settings_snapshot_tile_label">Snapshot</string>
-    <string name="no_rules_configured">No rules configured.</string>
 </resources>

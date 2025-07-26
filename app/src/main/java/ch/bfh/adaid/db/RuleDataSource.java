@@ -82,7 +82,7 @@ public class RuleDataSource {
      * notified.
      *
      * @param observer The observer that adds the rule.
-     * @param rule The rule to add.
+     * @param rule     The rule to add.
      */
     public void add(RuleObserver observer, Rule rule) {
         executor.execute(() -> {
@@ -105,7 +105,7 @@ public class RuleDataSource {
      * are notified.
      *
      * @param observer The observer that changes the rule.
-     * @param rule The rule to change.
+     * @param rule     The rule to change.
      */
     public void change(RuleObserver observer, Rule rule) {
         executor.execute(() -> {
@@ -127,7 +127,7 @@ public class RuleDataSource {
      * notified.
      *
      * @param observer The observer that deletes the rule.
-     * @param rule The rule to update.
+     * @param rule     The rule to update.
      */
     public void remove(RuleObserver observer, Rule rule) {
         executor.execute(() -> {

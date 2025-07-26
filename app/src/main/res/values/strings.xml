@@ -76,4 +76,7 @@
     <string name="a11y_service_description">An adblocker that utilizes accessibility service functionalities to react to ads in other apps.</string>
     <string name="a11y_service_not_enabled_message">The accessibility service of this app is disabled. Please enable it in the settings.</string>
     <string name="a11y_service_not_enabled_action">Open settings</string>
+
+    <!-- Strings used for settings -->
+    <string name="settings_snapshot_tile_label">Snapshot</string>
 </resources>

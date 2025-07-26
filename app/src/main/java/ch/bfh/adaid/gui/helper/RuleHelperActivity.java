@@ -160,7 +160,7 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
      * @param intent New intent from the a11y service with the captured view tree snapshot.
      */
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         // If the intent contains a view tree snapshot, process it and store the intent in the
@@ -199,7 +199,15 @@ public class RuleHelperActivity extends AppCompatActivity implements ViewTreeRec
     public void onItemClick(int position) {
         // Get the view tree node at the given position and send its data back to the rule activity.
         FlattenedViewTree.SimpleView view = adapter.getItem(position);
-        setResult(RESULT_OK, RuleActivity.getResultIntent(view.id, view.text, viewTree.packageName));
+        Intent intent = RuleActivity.getHelperIntent(view.id, view.text, viewTree.packageName);
+        // If we have a calling activity, then this helper was called from the "new rule" activity.
+        // If not, then this was (probably) called directly from the a11y service as the result of
+        // the "take next possible snapshot" quick tile.
+        if (getCallingActivity() != null) {
+            setResult(RESULT_OK, intent);
+        } else {
+            startActivity(intent);
+        }
         finish();
     }
 

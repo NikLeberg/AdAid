@@ -2,8 +2,8 @@ package ch.bfh.adaid.service;
 
 import android.accessibilityservice.AccessibilityService;
 
-import ch.bfh.adaid.action.ActionFactory;
 import ch.bfh.adaid.action.Action;
+import ch.bfh.adaid.action.ActionFactory;
 import ch.bfh.adaid.db.Rule;
 
 /**
@@ -14,10 +14,12 @@ import ch.bfh.adaid.db.Rule;
  * this behaves like a wrapper class with a reference to the actual Rule instance.
  * <p>
  * With the methods and attributes of this class a seen and gone rule trigger mechanisms is created:
- * - First seen trigger. If a rule i.e. the view it searches for is seen for the first time, then
- *   the triggerSeen of the action is performed.
- * - Gone trigger. If a rule i.e. the view it searches for is not seen anymore, then the triggerGone
- *   of the action is performed.
+ * <ul>
+ *     <li>First seen trigger. If a rule i.e. the view it searches for is seen for the first time,
+ *         then the triggerSeen of the action is performed.</li>
+ *     <li>Gone trigger. If a rule i.e. the view it searches for is not seen anymore, then the
+ *         triggerGone of the action is performed.</li>
+ * </ul>
  *
  * @author Niklaus Leuenberger
  */
@@ -35,7 +37,7 @@ public class RuleWithExtras {
     /**
      * Action that corresponds to the one as defined in the rule.
      */
-    public Action action;
+    public final Action action;
 
     /**
      * Default constructor.

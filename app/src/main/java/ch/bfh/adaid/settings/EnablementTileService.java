@@ -7,8 +7,13 @@ import android.util.Log;
 
 import ch.bfh.adaid.service.A11yService;
 
-public class A11yTileService extends TileService {
-    private static final String TAG = "A11yTileService";
+/**
+ * Quick settings tile that toggles the a11y service on or off.
+ *
+ * @author Niklaus Leuenberger
+ */
+public class EnablementTileService extends TileService {
+    private static final String TAG = "EnablementTileService";
 
     /**
      * Called when the system adds the tile for the first time.
@@ -23,7 +28,7 @@ public class A11yTileService extends TileService {
     }
 
     /**
-     * Called when the systems want to check the sate of the quick tile.
+     * Called when the system wants to check the state of the quick tile.
      */
     @Override
     public void onStartListening() {

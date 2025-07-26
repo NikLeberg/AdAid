@@ -1,4 +1,3 @@
-
 package ch.bfh.adaid.gui.helper;
 
 import android.content.Context;
@@ -67,8 +66,8 @@ public class ViewTreeRecyclerViewAdapter extends RecyclerView.Adapter<ViewTreeRe
 
     // stores and recycles views as they are scrolled off screen
     public class ViewTreeRecyclerViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewId;
-        TextView textViewText;
+        final TextView textViewId;
+        final TextView textViewText;
 
         ViewTreeRecyclerViewHolder(View itemView) {
             super(itemView);

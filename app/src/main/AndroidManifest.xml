@@ -31,7 +31,12 @@
             android:name=".gui.rule.NewRuleActivity"
             android:exported="false"
             android:label="@string/rule_new_activity_title"
-            android:parentActivityName=".gui.main.MainActivity" />
+            android:parentActivityName=".gui.main.MainActivity">
+            <intent-filter>
+                <action android:name="ch.bfh.adaid.gui.rule.RuleActivity.INTENT_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".gui.helper.RuleHelperActivity"
             android:exported="false"

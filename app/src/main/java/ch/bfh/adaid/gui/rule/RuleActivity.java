@@ -42,6 +42,7 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
     public static final String EXTRA_VIEW_ID_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewId";
     public static final String EXTRA_VIEW_TEXT_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.viewText";
     public static final String EXTRA_PACKAGE_KEY = "ch.bfh.adaid.gui.rule.RuleActivity.packageName";
+    public static final String INTENT_ACTION = "ch.bfh.adaid.gui.rule.RuleActivity.INTENT_ACTION";
 
     /**
      * Get an intent to return data from the rule helper to this activity.
@@ -118,6 +119,9 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
         getDataFromRuleHelperLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::setFormFromRuleHelperResult);
+
+        // We may have been started in "reverse" from the rule helper activity.
+        setFormFromRuleHelperIntent(getIntent());
     }
 
     /**
@@ -398,16 +402,12 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
     /**
      * Set the form values for app, id and text to the ones returned from the rule helper activity.
      *
-     * @param result The result from the rule helper activity.
+     * @param intent The intent from the rule helper activity.
      */
-    protected void setFormFromRuleHelperResult(ActivityResult result) {
-        Intent intent = result.getData();
-        if (result.getResultCode() != Activity.RESULT_OK || intent == null) {
-            return;
-        }
+    protected void setFormFromRuleHelperIntent(Intent intent) {
         // Get the required data from the intent.
-        if (!intent.hasExtra(EXTRA_VIEW_ID_KEY) || !intent.hasExtra(EXTRA_PACKAGE_KEY)) {
-            throw new IllegalArgumentException("No valid data in result intent given.");
+        if (intent == null || !intent.hasExtra(EXTRA_VIEW_ID_KEY) || !intent.hasExtra(EXTRA_PACKAGE_KEY)) {
+            return;
         }
         String viewId = intent.getStringExtra(EXTRA_VIEW_ID_KEY);
         setTextInput(R.id.textInputViewId, viewId);
@@ -418,6 +418,19 @@ public abstract class RuleActivity extends AppCompatActivity implements RuleObse
             String viewText = intent.getStringExtra(EXTRA_VIEW_TEXT_KEY);
             setTextInput(R.id.textInputViewText, viewText);
         }
+    }
+
+    /**
+     * Process returned result from the rule helper activity.
+     *
+     * @param result The result from the rule helper activity.
+     */
+    protected void setFormFromRuleHelperResult(ActivityResult result) {
+        Intent intent = result.getData();
+        if (result.getResultCode() != Activity.RESULT_OK) {
+            return;
+        }
+        setFormFromRuleHelperIntent(intent);
     }
 
 
